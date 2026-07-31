@@ -225,6 +225,22 @@ export default function PcaMap({
                 style={{ cursor: "pointer" }}
               />
 
+              <text
+                x={positionX}
+                y={positionY}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="white"
+                fontSize={10}
+                fontWeight="bold"
+                stroke="rgba(15, 15, 15, 0.75)"
+                strokeWidth={3}
+                paintOrder="stroke"
+                pointerEvents="none"
+              >
+                {patternName}
+              </text>
+
               {visibleLabels.has(labelKey) && (
                 <text
                   x={positionX + 14}
