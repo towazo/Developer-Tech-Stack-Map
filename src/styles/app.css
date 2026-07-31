@@ -1,0 +1,154 @@
+:root {
+  color-scheme: dark;
+  background-color: #151922;
+}
+
+html,
+body,
+#content {
+  min-height: 100%;
+  background-color: #151922;
+}
+
+body {
+  margin: 0;
+  color: #e5e7eb;
+}
+
+#content {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.section {
+  min-height: 100vh;
+  background-color: #151922;
+}
+
+.box {
+  background-color: #202630;
+  border: 1px solid #374151;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+  color: #e5e7eb;
+}
+
+.title,
+.subtitle {
+  color: #f1f5f9;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+#content .container > .title:first-child {
+  font-size: 2.25rem;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+#content .box > .title.is-4,
+#content .box > .subtitle {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+#content .title.is-5 {
+  font-size: 1.15rem;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+#content .title.is-6 {
+  font-size: 1.08rem;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+p,
+.content,
+.content li {
+  color: #e5e7eb;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+strong {
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+.has-text-grey {
+  color: #a8b0bd !important;
+}
+
+#content .is-size-7 {
+  font-size: 0.84rem !important;
+  line-height: 1.55;
+}
+
+hr {
+  height: 1px;
+  background-color: #374151;
+  border: 0;
+}
+
+.tabs.is-toggle a {
+  background-color: #1b2230;
+  border-color: #4b5563;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.tabs.is-toggle a:hover {
+  background-color: #273244;
+  border-color: #64748b;
+  color: #f8fafc;
+}
+
+.button:not(.is-info):not(.is-warning):not(.is-success):not(.is-danger) {
+  background-color: #273244;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+#content .button.is-small {
+  font-size: 0.875rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.button:not(.is-info):not(.is-warning):not(.is-success):not(.is-danger):hover {
+  background-color: #303b4f;
+  border-color: #64748b;
+  color: #f8fafc;
+}
+
+.tag.is-light {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+#content .tag {
+  font-size: 0.82rem;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.progress {
+  background-color: #374151;
+}
+
+.metadata-group {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.metadata-group > strong {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 700;
+}

@@ -1,0 +1,951 @@
+{
+  "total": 131,
+  "thresholdPercent": 1.0,
+  "categories": [
+    {
+      "key": "language",
+      "label": "プログラミング言語",
+      "count": 36,
+      "technologies": [
+        {
+          "index": 16,
+          "feature": "language__JavaScript",
+          "name": "JavaScript",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 81.2652
+        },
+        {
+          "index": 14,
+          "feature": "language__HTML/CSS",
+          "name": "HTML/CSS",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 74.3815
+        },
+        {
+          "index": 29,
+          "feature": "language__SQL",
+          "name": "SQL",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 72.7607
+        },
+        {
+          "index": 32,
+          "feature": "language__TypeScript",
+          "name": "TypeScript",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 62.0448
+        },
+        {
+          "index": 25,
+          "feature": "language__Python",
+          "name": "Python",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 56.8279
+        },
+        {
+          "index": 1,
+          "feature": "language__Bash/Shell (all shells)",
+          "name": "Bash/Shell (all shells)",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 52.2606
+        },
+        {
+          "index": 3,
+          "feature": "language__C#",
+          "name": "C#",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 32.7449
+        },
+        {
+          "index": 15,
+          "feature": "language__Java",
+          "name": "Java",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 32.3381
+        },
+        {
+          "index": 24,
+          "feature": "language__PowerShell",
+          "name": "PowerShell",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 26.2484
+        },
+        {
+          "index": 22,
+          "feature": "language__PHP",
+          "name": "PHP",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 23.1839
+        },
+        {
+          "index": 12,
+          "feature": "language__Go",
+          "name": "Go",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 20.2113
+        },
+        {
+          "index": 4,
+          "feature": "language__C++",
+          "name": "C++",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 16.6087
+        },
+        {
+          "index": 28,
+          "feature": "language__Rust",
+          "name": "Rust",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 15.0469
+        },
+        {
+          "index": 2,
+          "feature": "language__C",
+          "name": "C",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 14.9944
+        },
+        {
+          "index": 17,
+          "feature": "language__Kotlin",
+          "name": "Kotlin",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 11.9824
+        },
+        {
+          "index": 19,
+          "feature": "language__Lua",
+          "name": "Lua",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 9.3313
+        },
+        {
+          "index": 27,
+          "feature": "language__Ruby",
+          "name": "Ruby",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 8.7145
+        },
+        {
+          "index": 5,
+          "feature": "language__Dart",
+          "name": "Dart",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 6.6605
+        },
+        {
+          "index": 13,
+          "feature": "language__Groovy",
+          "name": "Groovy",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 5.6106
+        },
+        {
+          "index": 31,
+          "feature": "language__Swift",
+          "name": "Swift",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 4.856
+        },
+        {
+          "index": 34,
+          "feature": "language__Visual Basic (.Net)",
+          "name": "Visual Basic (.Net)",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 4.4032
+        },
+        {
+          "index": 0,
+          "feature": "language__Assembly",
+          "name": "Assembly",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 4.3704
+        },
+        {
+          "index": 7,
+          "feature": "language__Elixir",
+          "name": "Elixir",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 3.5042
+        },
+        {
+          "index": 23,
+          "feature": "language__Perl",
+          "name": "Perl",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 3.3336
+        },
+        {
+          "index": 26,
+          "feature": "language__R",
+          "name": "R",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 3.3336
+        },
+        {
+          "index": 33,
+          "feature": "language__VBA",
+          "name": "VBA",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 3.1433
+        },
+        {
+          "index": 10,
+          "feature": "language__GDScript",
+          "name": "GDScript",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 3.0908
+        },
+        {
+          "index": 30,
+          "feature": "language__Scala",
+          "name": "Scala",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 2.9661
+        },
+        {
+          "index": 20,
+          "feature": "language__MATLAB",
+          "name": "MATLAB",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 2.2508
+        },
+        {
+          "index": 35,
+          "feature": "language__Zig",
+          "name": "Zig",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 1.8768
+        },
+        {
+          "index": 18,
+          "feature": "language__Lisp",
+          "name": "Lisp",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 1.8243
+        },
+        {
+          "index": 21,
+          "feature": "language__MicroPython",
+          "name": "MicroPython",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 1.7127
+        },
+        {
+          "index": 6,
+          "feature": "language__Delphi",
+          "name": "Delphi",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 1.6602
+        },
+        {
+          "index": 8,
+          "feature": "language__Erlang",
+          "name": "Erlang",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 1.6471
+        },
+        {
+          "index": 9,
+          "feature": "language__F#",
+          "name": "F#",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 1.2927
+        },
+        {
+          "index": 11,
+          "feature": "language__Gleam",
+          "name": "Gleam",
+          "weight": 0.16666666666666666,
+          "overallUsageRate": 1.1812
+        }
+      ]
+    },
+    {
+      "key": "database",
+      "label": "データベース",
+      "count": 27,
+      "technologies": [
+        {
+          "index": 57,
+          "feature": "database__PostgreSQL",
+          "name": "PostgreSQL",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 64.0724
+        },
+        {
+          "index": 54,
+          "feature": "database__MySQL",
+          "name": "MySQL",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 42.26
+        },
+        {
+          "index": 59,
+          "feature": "database__SQLite",
+          "name": "SQLite",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 38.8149
+        },
+        {
+          "index": 58,
+          "feature": "database__Redis",
+          "name": "Redis",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 36.505
+        },
+        {
+          "index": 52,
+          "feature": "database__Microsoft SQL Server",
+          "name": "Microsoft SQL Server",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 31.321
+        },
+        {
+          "index": 53,
+          "feature": "database__MongoDB",
+          "name": "MongoDB",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 27.5543
+        },
+        {
+          "index": 50,
+          "feature": "database__MariaDB",
+          "name": "MariaDB",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 23.8139
+        },
+        {
+          "index": 45,
+          "feature": "database__Elasticsearch",
+          "name": "Elasticsearch",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 20.6575
+        },
+        {
+          "index": 44,
+          "feature": "database__Dynamodb",
+          "name": "Dynamodb",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 12.8355
+        },
+        {
+          "index": 56,
+          "feature": "database__Oracle",
+          "name": "Oracle",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 9.8563
+        },
+        {
+          "index": 61,
+          "feature": "database__Supabase",
+          "name": "Supabase",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 7.1789
+        },
+        {
+          "index": 37,
+          "feature": "database__BigQuery",
+          "name": "BigQuery",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 6.9624
+        },
+        {
+          "index": 40,
+          "feature": "database__Cloud Firestore",
+          "name": "Cloud Firestore",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 6.3456
+        },
+        {
+          "index": 41,
+          "feature": "database__Cosmos DB",
+          "name": "Cosmos DB",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 5.8993
+        },
+        {
+          "index": 47,
+          "feature": "database__H2",
+          "name": "H2",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 5.8797
+        },
+        {
+          "index": 46,
+          "feature": "database__Firebase Realtime Database",
+          "name": "Firebase Realtime Database",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 5.0266
+        },
+        {
+          "index": 60,
+          "feature": "database__Snowflake",
+          "name": "Snowflake",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 4.4097
+        },
+        {
+          "index": 49,
+          "feature": "database__InfluxDB",
+          "name": "InfluxDB",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 3.7798
+        },
+        {
+          "index": 43,
+          "feature": "database__DuckDB",
+          "name": "DuckDB",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 3.327
+        },
+        {
+          "index": 51,
+          "feature": "database__Microsoft Access",
+          "name": "Microsoft Access",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 3.1892
+        },
+        {
+          "index": 38,
+          "feature": "database__Cassandra",
+          "name": "Cassandra",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 3.1564
+        },
+        {
+          "index": 42,
+          "feature": "database__Databricks SQL",
+          "name": "Databricks SQL",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 3.0645
+        },
+        {
+          "index": 62,
+          "feature": "database__Valkey",
+          "name": "Valkey",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 2.8742
+        },
+        {
+          "index": 55,
+          "feature": "database__Neo4J",
+          "name": "Neo4J",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 2.7561
+        },
+        {
+          "index": 39,
+          "feature": "database__Clickhouse",
+          "name": "Clickhouse",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 2.5789
+        },
+        {
+          "index": 36,
+          "feature": "database__Amazon Redshift",
+          "name": "Amazon Redshift",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 2.2705
+        },
+        {
+          "index": 48,
+          "feature": "database__IBM DB2",
+          "name": "IBM DB2",
+          "weight": 0.19245008972987526,
+          "overallUsageRate": 1.9883
+        }
+      ]
+    },
+    {
+      "key": "platform",
+      "label": "プラットフォーム・開発技術",
+      "count": 40,
+      "technologies": [
+        {
+          "index": 73,
+          "feature": "platform__Docker",
+          "name": "Docker",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 77.4067
+        },
+        {
+          "index": 101,
+          "feature": "platform__npm",
+          "name": "npm",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 68.4231
+        },
+        {
+          "index": 64,
+          "feature": "platform__Amazon Web Services (AWS)",
+          "name": "Amazon Web Services (AWS)",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 48.8352
+        },
+        {
+          "index": 89,
+          "feature": "platform__Pip",
+          "name": "Pip",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 40.0748
+        },
+        {
+          "index": 98,
+          "feature": "platform__Vite",
+          "name": "Vite",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 32.7187
+        },
+        {
+          "index": 79,
+          "feature": "platform__Kubernetes",
+          "name": "Kubernetes",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 31.8853
+        },
+        {
+          "index": 83,
+          "feature": "platform__Microsoft Azure",
+          "name": "Microsoft Azure",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 29.3326
+        },
+        {
+          "index": 78,
+          "feature": "platform__Homebrew",
+          "name": "Homebrew",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 28.5846
+        },
+        {
+          "index": 100,
+          "feature": "platform__Yarn",
+          "name": "Yarn",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 27.2524
+        },
+        {
+          "index": 75,
+          "feature": "platform__Google Cloud",
+          "name": "Google Cloud",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 26.0056
+        },
+        {
+          "index": 99,
+          "feature": "platform__Webpack",
+          "name": "Webpack",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 24.4504
+        },
+        {
+          "index": 87,
+          "feature": "platform__NuGet",
+          "name": "NuGet",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 23.0724
+        },
+        {
+          "index": 69,
+          "feature": "platform__Cloudflare",
+          "name": "Cloudflare",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 22.718
+        },
+        {
+          "index": 81,
+          "feature": "platform__Make",
+          "name": "Make",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 21.1103
+        },
+        {
+          "index": 96,
+          "feature": "platform__Terraform",
+          "name": "Terraform",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 20.1457
+        },
+        {
+          "index": 82,
+          "feature": "platform__Maven (build tool)",
+          "name": "Maven (build tool)",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 18.0392
+        },
+        {
+          "index": 63,
+          "feature": "platform__APT",
+          "name": "APT",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 17.7439
+        },
+        {
+          "index": 102,
+          "feature": "platform__pnpm",
+          "name": "pnpm",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 16.7924
+        },
+        {
+          "index": 76,
+          "feature": "platform__Gradle",
+          "name": "Gradle",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 15.3488
+        },
+        {
+          "index": 74,
+          "feature": "platform__Firebase",
+          "name": "Firebase",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 14.522
+        },
+        {
+          "index": 70,
+          "feature": "platform__Composer",
+          "name": "Composer",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 13.7739
+        },
+        {
+          "index": 67,
+          "feature": "platform__Cargo",
+          "name": "Cargo",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 13.682
+        },
+        {
+          "index": 92,
+          "feature": "platform__Prometheus",
+          "name": "Prometheus",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 13.0061
+        },
+        {
+          "index": 97,
+          "feature": "platform__Vercel",
+          "name": "Vercel",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 12.9274
+        },
+        {
+          "index": 72,
+          "feature": "platform__Digital Ocean",
+          "name": "Digital Ocean",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 12.888
+        },
+        {
+          "index": 80,
+          "feature": "platform__MSBuild",
+          "name": "MSBuild",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 12.6714
+        },
+        {
+          "index": 68,
+          "feature": "platform__Chocolatey",
+          "name": "Chocolatey",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 11.7724
+        },
+        {
+          "index": 65,
+          "feature": "platform__Ansible",
+          "name": "Ansible",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 11.3393
+        },
+        {
+          "index": 90,
+          "feature": "platform__Podman",
+          "name": "Podman",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 11.0965
+        },
+        {
+          "index": 71,
+          "feature": "platform__Datadog",
+          "name": "Datadog",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 10.5912
+        },
+        {
+          "index": 91,
+          "feature": "platform__Poetry",
+          "name": "Poetry",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 9.4626
+        },
+        {
+          "index": 88,
+          "feature": "platform__Pacman",
+          "name": "Pacman",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 7.5005
+        },
+        {
+          "index": 66,
+          "feature": "platform__Bun",
+          "name": "Bun",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 6.6934
+        },
+        {
+          "index": 77,
+          "feature": "platform__Heroku",
+          "name": "Heroku",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 6.6605
+        },
+        {
+          "index": 84,
+          "feature": "platform__Netlify",
+          "name": "Netlify",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 6.6343
+        },
+        {
+          "index": 95,
+          "feature": "platform__Supabase",
+          "name": "Supabase",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 6.5687
+        },
+        {
+          "index": 85,
+          "feature": "platform__New Relic",
+          "name": "New Relic",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 4.7116
+        },
+        {
+          "index": 94,
+          "feature": "platform__Splunk",
+          "name": "Splunk",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 4.646
+        },
+        {
+          "index": 86,
+          "feature": "platform__Ninja",
+          "name": "Ninja",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 3.4582
+        },
+        {
+          "index": 93,
+          "feature": "platform__Railway",
+          "name": "Railway",
+          "weight": 0.15811388300841897,
+          "overallUsageRate": 1.7258
+        }
+      ]
+    },
+    {
+      "key": "webframe",
+      "label": "Webフレームワーク・技術",
+      "count": 28,
+      "technologies": [
+        {
+          "index": 120,
+          "feature": "webframe__Node.js",
+          "name": "Node.js",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 52.0375
+        },
+        {
+          "index": 123,
+          "feature": "webframe__React",
+          "name": "React",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 48.9533
+        },
+        {
+          "index": 130,
+          "feature": "webframe__jQuery",
+          "name": "jQuery",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 24.457
+        },
+        {
+          "index": 104,
+          "feature": "webframe__ASP.NET Core",
+          "name": "ASP.NET Core",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 22.7902
+        },
+        {
+          "index": 119,
+          "feature": "webframe__Next.js",
+          "name": "Next.js",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 22.7508
+        },
+        {
+          "index": 113,
+          "feature": "webframe__Express",
+          "name": "Express",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 22.2784
+        },
+        {
+          "index": 105,
+          "feature": "webframe__Angular",
+          "name": "Angular",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 20.6838
+        },
+        {
+          "index": 128,
+          "feature": "webframe__Vue.js",
+          "name": "Vue.js",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 19.3254
+        },
+        {
+          "index": 125,
+          "feature": "webframe__Spring Boot",
+          "name": "Spring Boot",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 17.3633
+        },
+        {
+          "index": 114,
+          "feature": "webframe__FastAPI",
+          "name": "FastAPI",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 17.0484
+        },
+        {
+          "index": 103,
+          "feature": "webframe__ASP.NET",
+          "name": "ASP.NET",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 15.6047
+        },
+        {
+          "index": 116,
+          "feature": "webframe__Flask",
+          "name": "Flask",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 14.7319
+        },
+        {
+          "index": 129,
+          "feature": "webframe__WordPress",
+          "name": "WordPress",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 12.9995
+        },
+        {
+          "index": 111,
+          "feature": "webframe__Django",
+          "name": "Django",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 12.8617
+        },
+        {
+          "index": 117,
+          "feature": "webframe__Laravel",
+          "name": "Laravel",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 9.7447
+        },
+        {
+          "index": 118,
+          "feature": "webframe__NestJS",
+          "name": "NestJS",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 8.2092
+        },
+        {
+          "index": 106,
+          "feature": "webframe__AngularJS",
+          "name": "AngularJS",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 8.0517
+        },
+        {
+          "index": 109,
+          "feature": "webframe__Blazor",
+          "name": "Blazor",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 7.9205
+        },
+        {
+          "index": 126,
+          "feature": "webframe__Svelte",
+          "name": "Svelte",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 7.4086
+        },
+        {
+          "index": 124,
+          "feature": "webframe__Ruby on Rails",
+          "name": "Ruby on Rails",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 7.0477
+        },
+        {
+          "index": 127,
+          "feature": "webframe__Symfony",
+          "name": "Symfony",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 4.8494
+        },
+        {
+          "index": 107,
+          "feature": "webframe__Astro",
+          "name": "Astro",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 4.646
+        },
+        {
+          "index": 121,
+          "feature": "webframe__Nuxt.js",
+          "name": "Nuxt.js",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 4.3638
+        },
+        {
+          "index": 110,
+          "feature": "webframe__Deno",
+          "name": "Deno",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 4.3376
+        },
+        {
+          "index": 115,
+          "feature": "webframe__Fastify",
+          "name": "Fastify",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 3.5173
+        },
+        {
+          "index": 108,
+          "feature": "webframe__Axum",
+          "name": "Axum",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 2.8939
+        },
+        {
+          "index": 122,
+          "feature": "webframe__Phoenix",
+          "name": "Phoenix",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 2.8151
+        },
+        {
+          "index": 112,
+          "feature": "webframe__Drupal",
+          "name": "Drupal",
+          "weight": 0.1889822365046136,
+          "overallUsageRate": 2.2705
+        }
+      ]
+    }
+  ]
+}
