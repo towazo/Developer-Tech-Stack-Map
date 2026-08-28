@@ -4,7 +4,7 @@
   "clusters": [
     {
       "id": 0,
-      "name": "Cluster 0",
+      "name": "cluster1",
       "count": 3183,
       "rate": 20.8872,
       "center": {
@@ -315,7 +315,7 @@
     },
     {
       "id": 1,
-      "name": "Cluster 1",
+      "name": "cluster2",
       "count": 1929,
       "rate": 12.6583,
       "center": {
@@ -626,7 +626,7 @@
     },
     {
       "id": 2,
-      "name": "Cluster 2",
+      "name": "cluster3",
       "count": 3006,
       "rate": 19.7257,
       "center": {
@@ -937,7 +937,7 @@
     },
     {
       "id": 3,
-      "name": "Cluster 3",
+      "name": "cluster4",
       "count": 3123,
       "rate": 20.4935,
       "center": {
@@ -1248,7 +1248,7 @@
     },
     {
       "id": 4,
-      "name": "Cluster 4",
+      "name": "cluster5",
       "count": 2199,
       "rate": 14.4301,
       "center": {
@@ -1559,7 +1559,7 @@
     },
     {
       "id": 5,
-      "name": "Cluster 5",
+      "name": "cluster6",
       "count": 1799,
       "rate": 11.8052,
       "center": {

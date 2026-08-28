@@ -120,12 +120,12 @@ THRESHOLD_PERCENT = 1.0
 # =========================================
 
 CLUSTER_NAMES = {
-    0: "C#・.NET中心型",
-    1: "PHP・Laravel中心型",
-    2: "React・TypeScript中心型",
-    3: "Python Web中心型",
-    4: "Java・Spring中心型",
-    5: "Python・Node.js複合型",
+    0: "cluster1",
+    1: "cluster2",
+    2: "cluster3",
+    3: "cluster4",
+    4: "cluster5",
+    5: "cluster6",
 }
 
 

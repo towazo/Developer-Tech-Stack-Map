@@ -126,7 +126,7 @@ export default function PcaMap({
               paintOrder="stroke"
               pointerEvents="none"
             >
-              {cluster.id}
+              {cluster.id + 1}
             </text>
 
             {visibleLabels.has(labelKey) && (
