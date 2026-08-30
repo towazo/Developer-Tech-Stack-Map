@@ -28,7 +28,7 @@ export default function UmapMapSection({
           <div className="content mb-4">
             <p>
               回答者の技術スタックをUMAPで2次元に圧縮しています。Baseと各Patternの
-              位置は、PythonバックエンドのUMAP transformで計算しています。
+              位置および近傍統計は、ブラウザ内で計算しています。
             </p>
 
             <div className="mt-4">
@@ -85,7 +85,8 @@ export default function UmapMapSection({
             </div>
 
             <p className="is-size-7 has-text-grey mt-4">
-              ※ 近傍500人は、UMAPで表示された2次元座標上の距離を使って選んでいます。
+              ※ 選択した技術スタックの位置は、131次元で近い回答者のUMAP座標から
+              補間しています。近傍500人は2次元座標上の距離で選んでいます。
             </p>
           </div>
         </div>
