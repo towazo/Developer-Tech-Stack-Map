@@ -105,13 +105,13 @@ export default function UmapMap({
     .range([height - margin.bottom, margin.top]);
 
   const patternColors = {
-    A: "#ffdd57",
-    B: "#48c78e",
-    C: "#f14668",
+    A: "#f4cd21",
+    B: "#109b45",
+    C: "#d54262",
   };
 
   const neighborhoodColors = {
-    base: "#38bdf8",
+    base: "#4951ef",
     A: patternColors.A,
     B: patternColors.B,
     C: patternColors.C,
@@ -135,8 +135,8 @@ export default function UmapMap({
           cx={xScale(point.x)}
           cy={yScale(point.y)}
           r={3}
-          fill="#64748b"
-          opacity={0.48}
+          fill="#8ba9f5"
+          opacity={0.56}
         />
       ))}
 
@@ -154,7 +154,7 @@ export default function UmapMap({
             cy={yScale(center.y)}
             r={getRadiusPixels(neighborhood.radius)}
             fill={neighborhoodColors[name]}
-            fillOpacity={0.08}
+            fillOpacity={0.2}
             stroke={neighborhoodColors[name]}
             strokeWidth={2.5}
             strokeOpacity={0.95}
@@ -191,8 +191,8 @@ export default function UmapMap({
             cx={xScale(basePosition.x)}
             cy={yScale(basePosition.y)}
             r={8}
-            fill="white"
-            stroke="black"
+            fill="#4cc9f0"
+            stroke="#0f172a"
             strokeWidth={3}
             onClick={() => toggleLabel("base")}
             style={{ cursor: "pointer" }}
@@ -232,7 +232,7 @@ export default function UmapMap({
                 cy={positionY}
                 r={8}
                 fill={patternColors[patternName]}
-                stroke="white"
+                stroke="#334155"
                 strokeWidth={2.5}
                 onClick={() => toggleLabel(labelKey)}
                 style={{ cursor: "pointer" }}

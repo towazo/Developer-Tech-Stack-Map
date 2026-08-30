@@ -24,7 +24,7 @@ function buildChartItems(metadataKey, items) {
     .reduce((total, item) => total + item.chartRate, 0);
 
   return otherRate > 0.05
-    ? [...leadingItems, { label: "上位5項目以外", value: otherRate }]
+    ? [...leadingItems, { label: "その他", value: otherRate }]
     : leadingItems;
 }
 

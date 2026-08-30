@@ -27,8 +27,8 @@ UMAP_OUTPUT_DIR = ROOT_DIR / "analysis_output" / "umap_preview"
 MULTIHOT_PATH = PROCESSED_DIR / "multihot_1_0pct.csv"
 UMAP_MODEL_PATH = UMAP_DATA_DIR / "umap_reducer.joblib"
 
-N_NEIGHBORS = 15
-MIN_DIST = 0.1
+N_NEIGHBORS = 20
+MIN_DIST = 0.2
 METRIC = "euclidean"
 RANDOM_STATE = 42
 PREVIEW_SAMPLE_SIZE = 3000

@@ -119,7 +119,11 @@ function calculateStatistics(runtime, neighbors, technologyData) {
     label: category.label,
     technologies: technologyStatistics
       .filter((technology) => technology.category === category.key)
-      .sort((left, right) => right.differencePoint - left.differencePoint)
+      .sort((left, right) => (
+        right.usageRate - left.usageRate
+        || right.overallUsageRate - left.overallUsageRate
+        || left.name.localeCompare(right.name)
+      ))
       .slice(0, 3)
       .map((technology, index) => ({ ...technology, rank: index + 1 })),
   }));

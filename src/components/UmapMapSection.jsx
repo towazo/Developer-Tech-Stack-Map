@@ -1,9 +1,9 @@
 import UmapMap from "./UmapMap";
 
 const patternColors = {
-  A: "#ffdd57",
-  B: "#48c78e",
-  C: "#f14668",
+  A: "#f2c94c",
+  B: "#56d6a4",
+  C: "#ff6b8a",
 };
 
 export default function UmapMapSection({
@@ -40,19 +40,19 @@ function MapOverlayLegend() {
       <strong className="umap-map-overlay-title">凡例</strong>
 
       <LegendRow
-        graphic={<circle cx="22" cy="10" r="3" fill="#64748b" opacity="0.7" />}
+        graphic={<circle cx="22" cy="10" r="3" fill="#0a4bee" opacity="0.7" />}
         label="回答者"
       />
       <LegendRow
-        graphic={<circle cx="22" cy="10" r="6" fill="white" stroke="black" strokeWidth="2" />}
+        graphic={<circle cx="22" cy="10" r="6" fill="#4cc9f0" stroke="#0f172a" strokeWidth="2" />}
         label="現在の技術"
       />
       <LegendRow
         graphic={
           <>
-            <circle cx="8" cy="10" r="5" fill={patternColors.A} stroke="white" />
-            <circle cx="22" cy="10" r="5" fill={patternColors.B} stroke="white" />
-            <circle cx="36" cy="10" r="5" fill={patternColors.C} stroke="white" />
+            <circle cx="8" cy="10" r="5" fill={patternColors.A} stroke="#334155" />
+            <circle cx="22" cy="10" r="5" fill={patternColors.B} stroke="#334155" />
+            <circle cx="36" cy="10" r="5" fill={patternColors.C} stroke="#334155" />
           </>
         }
         label="学習プラン A / B / C"
@@ -63,9 +63,9 @@ function MapOverlayLegend() {
             cx="22"
             cy="10"
             r="8"
-            fill="#38bdf8"
+            fill="#4cc9f0"
             fillOpacity="0.12"
-            stroke="#38bdf8"
+            stroke="#4cc9f0"
             strokeWidth="2"
             strokeDasharray="4 3"
           />

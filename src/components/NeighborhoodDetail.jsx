@@ -53,7 +53,7 @@ export default function NeighborhoodDetail({ neighborhoods, onBack }) {
 
       <div className="columns is-variable is-6 is-centered pb-2">
         <div className="column is-6">
-          <h4 className="title is-6">ジャンル別の特徴的な利用技術 Top3</h4>
+          <h4 className="title is-6">人気の技術 Top3</h4>
 
           <div className="field mb-4">
             <label className="label" htmlFor="technology-category-select">

@@ -6,8 +6,8 @@
       "count": 3183,
       "rate": 20.8872,
       "center": {
-        "x": -2.718581,
-        "y": 7.55381
+        "x": -3.904224,
+        "y": 6.452736
       },
       "representativeTechnologies": [
         "C#",
@@ -20,8 +20,8 @@
       "count": 1929,
       "rate": 12.6583,
       "center": {
-        "x": 0.549001,
-        "y": 3.680882
+        "x": 0.048454,
+        "y": 3.728932
       },
       "representativeTechnologies": [
         "PHP",
@@ -34,8 +34,8 @@
       "count": 3006,
       "rate": 19.7257,
       "center": {
-        "x": -0.083835,
-        "y": 1.265089
+        "x": -0.55729,
+        "y": 1.175563
       },
       "representativeTechnologies": [
         "React",
@@ -48,8 +48,8 @@
       "count": 3123,
       "rate": 20.4935,
       "center": {
-        "x": -2.359119,
-        "y": 1.890313
+        "x": -2.981623,
+        "y": 1.906067
       },
       "representativeTechnologies": [
         "Python",
@@ -62,8 +62,8 @@
       "count": 2199,
       "rate": 14.4301,
       "center": {
-        "x": -1.358418,
-        "y": -0.718316
+        "x": -2.123258,
+        "y": -0.749919
       },
       "representativeTechnologies": [
         "Java",
@@ -76,8 +76,8 @@
       "count": 1799,
       "rate": 11.8052,
       "center": {
-        "x": -0.03287,
-        "y": 2.516288
+        "x": -0.628547,
+        "y": 2.332237
       },
       "representativeTechnologies": [
         "Pip",
