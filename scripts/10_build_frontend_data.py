@@ -10,6 +10,7 @@ PROCESSED_DIR = ROOT_DIR / "data" / "processed"
 FRONTEND_DATA_DIR = ROOT_DIR / "public" / "data"
 MULTIHOT_PATH = PROCESSED_DIR / "multihot_1_0pct.csv"
 UMAP_COORDINATES_PATH = PROCESSED_DIR / "umap" / "umap_coordinates.csv"
+METADATA_PATH = PROCESSED_DIR / "analysis_metadata.csv"
 
 MAP_SAMPLE_SIZE = 5000
 RANDOM_STATE = 42
@@ -89,5 +90,64 @@ save_json(FRONTEND_DATA_DIR / "technologies.json", {
     "categories": categories,
 })
 
+metadata_df = pd.read_csv(METADATA_PATH).sort_values("analysis_id").reset_index(drop=True)
+if not metadata_df["analysis_id"].equals(coordinates_df["analysis_id"]):
+    raise ValueError("metadata rows and UMAP coordinate rows do not match.")
+
+metadata_columns = ["DevType", "OrgSize", "Industry", "RemoteWork", "Age"]
+metadata_labels = ["職種", "企業規模", "業界", "働き方", "年代"]
+metadata_dictionaries = []
+metadata_codes = []
+
+for column in metadata_columns:
+    values = sorted(str(value) for value in metadata_df[column].dropna().unique())
+    value_to_code = {value: index for index, value in enumerate(values)}
+    metadata_dictionaries.append(values)
+    metadata_codes.append([
+        value_to_code.get(str(value), -1) if pd.notna(value) else -1
+        for value in metadata_df[column]
+    ])
+
+weights = [
+    1 / math.sqrt(category_counts[feature.split("__", 1)[0]])
+    for feature in feature_order
+]
+respondents = []
+
+for row_index, row in multihot_df.iterrows():
+    selected_features = [
+        feature_index
+        for feature_index, feature in enumerate(feature_order)
+        if row[feature] > 0
+    ]
+    work_experience = metadata_df.iloc[row_index]["WorkExp"]
+    respondents.append([
+        selected_features,
+        round(sum(weights[index] ** 2 for index in selected_features), 8),
+        round(float(coordinates_df.iloc[row_index]["umap1"]), 6),
+        round(float(coordinates_df.iloc[row_index]["umap2"]), 6),
+        [codes[row_index] for codes in metadata_codes],
+        round(float(work_experience), 2) if pd.notna(work_experience) else None,
+    ])
+
+save_json(FRONTEND_DATA_DIR / "browser_runtime.json", {
+    "featureCount": len(feature_order),
+    "weights": weights,
+    "metadata": [
+        {
+            "key": column[0].lower() + column[1:],
+            "label": label,
+            "values": values,
+        }
+        for column, label, values in zip(
+            metadata_columns,
+            metadata_labels,
+            metadata_dictionaries,
+        )
+    ],
+    "respondents": respondents,
+})
+
 print(f"map_points.json: {len(map_points):,} points")
 print(f"technologies.json: {len(feature_order)} technologies")
+print(f"browser_runtime.json: {len(respondents):,} respondents")

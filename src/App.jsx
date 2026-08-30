@@ -3,9 +3,9 @@ import TechnologyPanel from "./components/TechnologyPanel";
 import UmapMapSection from "./components/UmapMapSection";
 import NeighborhoodDetail from "./components/NeighborhoodDetail";
 import Footer from "./components/Footer";
+import { analyzeTechnologyStack } from "./utils/browserAnalysis";
 
 export default function App() {
-  const apiBaseUrl = (import.meta.env.VITE_UMAP_API_URL || "").replace(/\/$/, "");
   const [mapData, setMapData] = useState(null);
   const [technologyData, setTechnologyData] = useState(null);
   const [selectedBase, setSelectedBase] = useState([]);
@@ -27,7 +27,7 @@ export default function App() {
     B: null,
     C: null,
   });
-  const [apiError, setApiError] = useState(null);
+  const [analysisError, setAnalysisError] = useState(null);
 
   //useEffect→あるタイミングで処理を実行するモノ
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function App() {
         B: null,
         C: null,
       });
-      setApiError(null);
+      setAnalysisError(null);
 
 
       return () => {
@@ -84,57 +84,24 @@ export default function App() {
     // 技術一覧から
     // ① UMAP上の表示位置
     // の両方を計算する
-    const fetchUmapPosition = async (selectedIndexes) => {
+    const calculateStack = async (selectedIndexes) => {
       try {
-        const response = await fetch(`${apiBaseUrl}/api/umap-position`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            selectedIndexes,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(
-            `UMAP API returned ${response.status}`
-          );
-        }
-
-        const data = await response.json();
-
-        if (!data.ok) {
-          throw new Error(data.error || "UMAP API failed");
-        }
-
-        return {
-          x: data.x,
-          y: data.y,
-          method: data.method,
-          neighborhood: data.neighborhood ?? null,
-        };
-      } catch (error) {
-        console.error("UMAP APIを利用できません。", error);
-        setApiError(
-          "UMAPバックエンドに接続できません。公開環境のAPI URL設定を確認してください。"
+        const position = await analyzeTechnologyStack(
+          selectedIndexes,
+          technologyData
         );
-
-        return null;
+        return { position, neighborhood: position.neighborhood };
+      } catch (error) {
+        console.error("ブラウザ内の分析処理に失敗しました。", error);
+        setAnalysisError(
+          "分析データを読み込めませんでした。ページを再読み込みしてください。"
+        );
+        return { position: null, neighborhood: null };
       }
     };
 
-    const calculateStack = async (selectedIndexes) => {
-      const position = await fetchUmapPosition(selectedIndexes);
-
-      return {
-        position,
-        neighborhood: position?.neighborhood ?? null,
-      };
-    };
-
     const updateStackResults = async () => {
-      setApiError(null);
+      setAnalysisError(null);
       // -------------------------
       // Base
       // -------------------------
@@ -278,9 +245,9 @@ export default function App() {
           onToggle={toggleTechnology}
         />
 
-        {apiError && (
+        {analysisError && (
           <div className="notification is-danger is-light" role="alert">
-            {apiError}
+            {analysisError}
           </div>
         )}
 
