@@ -181,33 +181,33 @@ export default function TechnologyPanel({
     <div className="technology-panel">
       <h2 className="title is-4">
         {activeTab === "base"
-          ? "Base技術を選択"
-          : `Pattern ${activeTab} の追加技術を選択`}
+          ? "現在使っている技術を選択"
+          : `学習プラン ${activeTab} に追加する技術を選択`}
       </h2>
 
       <div className="tabs is-toggle">
         <ul>
           <li className={activeTab === "base" ? "is-active" : ""}>
             <a onClick={() => setActiveTab("base")}>
-              Base
+              現在の技術
             </a>
           </li>
 
           <li className={activeTab === "A" ? "is-active" : ""}>
             <a onClick={() => setActiveTab("A")}>
-              Pattern A
+              学習プラン A
             </a>
           </li>
 
           <li className={activeTab === "B" ? "is-active" : ""}>
             <a onClick={() => setActiveTab("B")}>
-              Pattern B
+              学習プラン B
             </a>
           </li>
 
           <li className={activeTab === "C" ? "is-active" : ""}>
             <a onClick={() => setActiveTab("C")}>
-              Pattern C
+              学習プラン C
             </a>
           </li>
         </ul>

@@ -10,7 +10,6 @@ export default function App() {
     window.location.hash === "#details" ? "details" : "map"
   );
   const [mapData, setMapData] = useState(null);
-  const [clusterData, setClusterData] = useState(null);
   const [technologyData, setTechnologyData] = useState(null);
   const [selectedBase, setSelectedBase] = useState([]);
   const [activeTab, setActiveTab] = useState("base");
@@ -100,11 +99,6 @@ export default function App() {
         C: null,
       });
 
-    fetch("/data/cluster_summary.json")
-      .then((response) => response.json())
-      .then((data) => {
-        setClusterData(data);
-      });
       setAnalysisError(null);
 
 
@@ -282,7 +276,6 @@ export default function App() {
                 <main className="visualization-main">
                   <UmapMapSection
                     mapData={mapData}
-                    clusterData={clusterData}
                     basePosition={basePosition}
                     patternPositions={patternPositions}
                     neighborhoods={neighborhoods}
@@ -317,7 +310,7 @@ export default function App() {
                       className="button is-info is-fullwidth"
                       onClick={() => navigateToPage("details")}
                     >
-                      近傍回答者の詳細を見る
+                      似ているエンジニアの傾向を見る
                     </button>
                   </div>
                 </aside>
