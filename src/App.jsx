@@ -8,7 +8,7 @@ import {
   createBinaryVector,
   createWeightVector,
   applyWeights,
-  transformToPca,
+  findNearestAnchorPosition,
   findNearestCluster,
 } from "./utils/techVector";
 
@@ -67,9 +67,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    let isCancelled = false;
+
     // 必要なデータがまだ読み込まれていなければ何もしない
     if (!technologyData || !modelData) {
-      return;
+      return () => {
+        isCancelled = true;
+      };
     }
 
     // Baseが空ならすべての結果を消す
@@ -89,7 +93,9 @@ export default function App() {
         C: null,
       });
 
-      return;
+      return () => {
+        isCancelled = true;
+      };
     }
 
     // 131技術それぞれの重み
@@ -99,10 +105,52 @@ export default function App() {
     );
 
     // 技術一覧から
-    // ① PCA座標
+    // ① UMAP上の表示位置
     // ② 最も近いクラスタ
     // の両方を計算する
-    const calculateStack = (selectedIndexes) => {
+    const fetchUmapPosition = async (
+      selectedIndexes,
+      fallbackPosition
+    ) => {
+      try {
+        const response = await fetch("/api/umap-position", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            selectedIndexes,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `UMAP API returned ${response.status}`
+          );
+        }
+
+        const data = await response.json();
+
+        if (!data.ok) {
+          throw new Error(data.error || "UMAP API failed");
+        }
+
+        return {
+          x: data.x,
+          y: data.y,
+          method: data.method,
+        };
+      } catch (error) {
+        console.warn(
+          "UMAP APIが利用できないため、近傍アンカー座標を使用します。",
+          error
+        );
+
+        return fallbackPosition;
+      }
+    };
+
+    const calculateStack = async (selectedIndexes) => {
       const binaryVector = createBinaryVector(
         selectedIndexes,
         modelData.featureCount
@@ -113,14 +161,20 @@ export default function App() {
         weightVector
       );
 
-      const position = transformToPca(
+      const fallbackPosition = findNearestAnchorPosition(
         weightedVector,
-        modelData.pca
+        weightVector,
+        modelData.respondentAnchors
       );
 
       const nearestCluster = findNearestCluster(
         weightedVector,
         modelData.clusterCentersWeighted
+      );
+
+      const position = await fetchUmapPosition(
+        selectedIndexes,
+        fallbackPosition
       );
 
       return {
@@ -129,67 +183,79 @@ export default function App() {
       };
     };
 
-    // -------------------------
-    // Base
-    // -------------------------
+    const updateStackResults = async () => {
+      // -------------------------
+      // Base
+      // -------------------------
 
-    const baseResult = calculateStack(selectedBase);
+      const baseResult = await calculateStack(selectedBase);
 
-    setBasePosition(baseResult.position);
+      // -------------------------
+      // Pattern A・B・C
+      // -------------------------
 
-    // -------------------------
-    // Pattern A・B・C
-    // -------------------------
+      const patternResults = {
+        A:
+          selectedPatterns.A.length > 0
+            ? await calculateStack([
+                ...selectedBase,
+                ...selectedPatterns.A,
+              ])
+            : null,
 
-    const patternResults = {
-      A:
-        selectedPatterns.A.length > 0
-          ? calculateStack([
-              ...selectedBase,
-              ...selectedPatterns.A,
-            ])
-          : null,
+        B:
+          selectedPatterns.B.length > 0
+            ? await calculateStack([
+                ...selectedBase,
+                ...selectedPatterns.B,
+              ])
+            : null,
 
-      B:
-        selectedPatterns.B.length > 0
-          ? calculateStack([
-              ...selectedBase,
-              ...selectedPatterns.B,
-            ])
-          : null,
+        C:
+          selectedPatterns.C.length > 0
+            ? await calculateStack([
+                ...selectedBase,
+                ...selectedPatterns.C,
+              ])
+            : null,
+      };
 
-      C:
-        selectedPatterns.C.length > 0
-          ? calculateStack([
-              ...selectedBase,
-              ...selectedPatterns.C,
-            ])
-          : null,
+      if (isCancelled) {
+        return;
+      }
+
+      setBasePosition(baseResult.position);
+
+      setPatternPositions({
+        A: patternResults.A?.position ?? null,
+        B: patternResults.B?.position ?? null,
+        C: patternResults.C?.position ?? null,
+      });
+
+      setNearestClusters({
+        base: baseResult.nearestCluster,
+        A: patternResults.A?.nearestCluster ?? null,
+        B: patternResults.B?.nearestCluster ?? null,
+        C: patternResults.C?.nearestCluster ?? null,
+      });
+
+      console.log(
+        "Baseの最近傍クラスタ:",
+        baseResult.nearestCluster
+      );
+
+      console.log("Patternの最近傍クラスタ:", {
+        A: patternResults.A?.nearestCluster ?? null,
+        B: patternResults.B?.nearestCluster ?? null,
+        C: patternResults.C?.nearestCluster ?? null,
+      });
     };
 
-    setPatternPositions({
-      A: patternResults.A?.position ?? null,
-      B: patternResults.B?.position ?? null,
-      C: patternResults.C?.position ?? null,
-    });
+    updateStackResults();
 
-    setNearestClusters({
-      base: baseResult.nearestCluster,
-      A: patternResults.A?.nearestCluster ?? null,
-      B: patternResults.B?.nearestCluster ?? null,
-      C: patternResults.C?.nearestCluster ?? null,
-    });
-
-    console.log(
-      "Baseの最近傍クラスタ:",
-      baseResult.nearestCluster
-    );
-
-    console.log("Patternの最近傍クラスタ:", {
-      A: patternResults.A?.nearestCluster ?? null,
-      B: patternResults.B?.nearestCluster ?? null,
-      C: patternResults.C?.nearestCluster ?? null,
-    });
+    return () => {
+      isCancelled = true;
+    };
   }, [
     selectedBase,
     selectedPatterns,

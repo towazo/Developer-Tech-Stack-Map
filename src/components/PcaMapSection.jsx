@@ -39,7 +39,7 @@ export default function PcaMapSection({
           <div className="content mb-4">
             <p>
               使用技術の傾向から回答者を6つのクラスタに分類し、
-              その技術スタックをPCAによって2次元上に表示しています。
+              その技術スタックをUMAPによって2次元上に表示しています。
               分析対象15,239人のうち、見やすさのため5,000人を表示しています。
             </p>
 
@@ -216,9 +216,10 @@ export default function PcaMapSection({
             </p>
 
             <p className="is-size-7 has-text-grey">
-              ※ マップは131次元の技術スタックデータをPCAで2次元に圧縮したものです。
+              ※ マップは131次元の技術スタックデータをUMAPで2次元に圧縮したものです。
               最も近いクラスタの判定は、マップ上の距離ではなく、
               元の重み付き131次元データで行っています。
+              Base・Patternの表示位置は、PythonバックエンドのUMAP transformで計算しています。
             </p>
           </div>
         </div>

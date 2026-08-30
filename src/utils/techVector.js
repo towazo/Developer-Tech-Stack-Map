@@ -27,27 +27,73 @@ export function applyWeights(binaryVector, weightVector) {
   });
 }
 
-// PCA変換
-export function transformToPca(weightedVector, pca) {
+// UMAPはブラウザで簡単に同じtransformを再現できない。
+// そのため、重み付き131次元空間で最も近い既存回答者を探し、
+// その回答者のUMAP座標をBase/Patternの表示位置として使う。
+export function findNearestAnchorPosition(
+  weightedVector,
+  weightVector,
+  respondentAnchors
+) {
+  if (!respondentAnchors || respondentAnchors.length === 0) {
+    return null;
+  }
 
-  // 各値からSurvey全体の平均を引く
-  const centeredVector = weightedVector.map((value, index) => {
-    return value - pca.mean[index];
+  const selectedSquaredNorm = weightedVector.reduce(
+    (sum, value) => {
+      return sum + value * value;
+    },
+    0
+  );
+
+  let nearestAnchor = null;
+  let nearestSquaredDistance = Infinity;
+
+  respondentAnchors.forEach((anchor) => {
+    const anchorFeatures = Array.isArray(anchor)
+      ? anchor[5]
+      : anchor.features;
+
+    const anchorSquaredNorm = Array.isArray(anchor)
+      ? anchor[4]
+      : anchor.squaredNorm;
+
+    const dotProduct = anchorFeatures.reduce(
+      (sum, featureIndex) => {
+        return sum + weightedVector[featureIndex] * weightVector[featureIndex];
+      },
+      0
+    );
+
+    const squaredDistance =
+      selectedSquaredNorm + anchorSquaredNorm - 2 * dotProduct;
+
+    if (squaredDistance < nearestSquaredDistance) {
+      nearestSquaredDistance = squaredDistance;
+      nearestAnchor = anchor;
+    }
   });
 
-  // PC1を計算
-  const pc1 = centeredVector.reduce((sum, value, index) => {
-    return sum + value * pca.components[0][index];
-  }, 0);
-
-  // PC2を計算
-  const pc2 = centeredVector.reduce((sum, value, index) => {
-    return sum + value * pca.components[1][index];
-  }, 0);
+  if (!nearestAnchor) {
+    return null;
+  }
 
   return {
-    x: pc1,
-    y: pc2,
+    x: Array.isArray(nearestAnchor)
+      ? nearestAnchor[2]
+      : nearestAnchor.x,
+    y: Array.isArray(nearestAnchor)
+      ? nearestAnchor[3]
+      : nearestAnchor.y,
+    anchorId: Array.isArray(nearestAnchor)
+      ? nearestAnchor[0]
+      : nearestAnchor.id,
+    anchorCluster: Array.isArray(nearestAnchor)
+      ? nearestAnchor[1]
+      : nearestAnchor.cluster,
+    anchorDistance: Math.sqrt(
+      Math.max(nearestSquaredDistance, 0)
+    ),
   };
 }
 

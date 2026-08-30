@@ -35,11 +35,35 @@ export default function PcaMap({
     left: 60,
   };
 
-  // PCAのx座標の最小値・最大値
-  const xExtent = d3.extent(points, (point) => point.x);
+  const drawablePositions = [
+    ...points.map((point) => ({
+      x: point.x,
+      y: point.y,
+    })),
+    ...clusters.map((cluster) => cluster.center),
+    ...(basePosition ? [basePosition] : []),
+    ...Object.values(patternPositions).filter(Boolean),
+  ];
 
-  // PCAのy座標の最小値・最大値
-  const yExtent = d3.extent(points, (point) => point.y);
+  const addPadding = (extent) => {
+    const [minValue, maxValue] = extent;
+    const span = maxValue - minValue || 1;
+    const padding = span * 0.05;
+
+    return [
+      minValue - padding,
+      maxValue + padding,
+    ];
+  };
+
+  // UMAP座標の表示範囲
+  const xExtent = addPadding(
+    d3.extent(drawablePositions, (point) => point.x)
+  );
+
+  const yExtent = addPadding(
+    d3.extent(drawablePositions, (point) => point.y)
+  );
 
   const xScale = d3
     .scaleLinear()
