@@ -3,6 +3,7 @@ export default function TechnologySelector({
   mode,
   baseSelected,
   patternSelected,
+  highlightedTechnologyIndex,
   onToggle,
 }) {
   return (
@@ -10,13 +11,19 @@ export default function TechnologySelector({
       {categories.map((category) => (
         <div key={category.key} className="mb-5">
 
-          <h3 className="title is-5 mb-3">
-            {category.label}
-          </h3>
-
           <div className="buttons">
 
-            {category.technologies.map((technology) => {
+            {[...category.technologies]
+              .sort((a, b) =>
+                a.name.localeCompare(
+                  b.name,
+                  "en",
+                  {
+                    sensitivity: "base",
+                  }
+                )
+              )
+              .map((technology) => {
 
               const isBaseSelected =
                 baseSelected.includes(technology.index);
@@ -45,6 +52,10 @@ export default function TechnologySelector({
                 if (mode === "C") {
                   buttonClass += " is-danger";
                 }
+              }
+
+              if (highlightedTechnologyIndex === technology.index) {
+                buttonClass += " is-search-highlighted";
               }
 
               return (
