@@ -22,6 +22,11 @@ PCA_DIR = (
     / "pca"
 )
 
+UMAP_DIR = (
+    PROCESSED_DIR
+    / "umap"
+)
+
 ANALYSIS_OUTPUT_DIR = (
     ROOT_DIR
     / "analysis_output"
@@ -79,13 +84,18 @@ WORKEXP_PATH = (
 )
 
 PCA_COORDINATES_PATH = (
-    PCA_DIR
-    / "pca_coordinates.csv"
+    UMAP_DIR
+    / "umap_coordinates.csv"
 )
 
 PCA_CENTERS_PATH = (
-    PCA_DIR
-    / "cluster_centers_pca.csv"
+    UMAP_DIR
+    / "cluster_centers_umap.csv"
+)
+
+UMAP_SUMMARY_PATH = (
+    UMAP_DIR
+    / "umap_summary.csv"
 )
 
 FEATURE_DEFINITIONS_PATH = (
@@ -247,6 +257,10 @@ centers_df = pd.read_csv(
     PCA_CENTERS_PATH
 )
 
+umap_summary_df = pd.read_csv(
+    UMAP_SUMMARY_PATH
+)
+
 
 with open(
     FEATURE_DEFINITIONS_PATH,
@@ -314,7 +328,7 @@ if len(cluster_df) != len(multihot_df):
 if len(coordinates_df) != len(multihot_df):
 
     raise ValueError(
-        "PCA座標の人数が"
+        "UMAP座標の人数が"
         "Multi-hotデータと一致しません。"
     )
 
@@ -322,7 +336,7 @@ if len(coordinates_df) != len(multihot_df):
 if coordinates_df["cluster"].nunique() != K:
 
     raise ValueError(
-        "PCA座標のクラスタ数が"
+        "UMAP座標のクラスタ数が"
         "6ではありません。"
     )
 
@@ -605,7 +619,7 @@ for _, row in sampled_df.iterrows():
                 round(
                     float(
                         row[
-                            "pc1"
+                            "umap1"
                         ]
                     ),
                     6,
@@ -615,7 +629,7 @@ for _, row in sampled_df.iterrows():
                 round(
                     float(
                         row[
-                            "pc2"
+                            "umap2"
                         ]
                     ),
                     6,
@@ -798,7 +812,7 @@ for cluster_id in range(K):
 
         raise ValueError(
             f"Cluster {cluster_id} の"
-            "PCA中心が1件ではありません。"
+            "UMAP中心が1件ではありません。"
         )
 
 
@@ -1090,7 +1104,7 @@ for cluster_id in range(K):
                         round(
                             float(
                                 center_row[
-                                    "pc1"
+                                    "umap1"
                                 ]
                             ),
                             6,
@@ -1100,7 +1114,7 @@ for cluster_id in range(K):
                         round(
                             float(
                                 center_row[
-                                    "pc2"
+                                    "umap2"
                                 ]
                             ),
                             6,
@@ -1212,27 +1226,114 @@ save_json(
 # 18. model.json
 # =========================================
 #
-# PCAのモデル値は精度を落とさないため
-# 丸めず、そのまま保存する。
-#
 # React側では
 #
 # 1. 131次元Multi-hotを作る
 # 2. カテゴリ重みを掛ける
-# 3. PCAで2次元座標を計算
-# 4. 131次元中心との距離を計算
+# 3. 重み付き131次元空間で最も近いクラスタを計算
+# 4. 近い既存回答者アンカーのUMAP座標へ表示
 #
 # に使用する。
 # =========================================
 
-explained_variance_ratio = (
-    pca_model[
-        "pca"
-    ][
-        "explained_variance_ratio"
-    ]
+umap_summary = umap_summary_df.iloc[0].to_dict()
+
+feature_weights = {
+    item["feature"]: item["weight"]
+    for item in feature_definitions
+}
+
+anchor_df = pd.merge(
+    coordinates_df[
+        [
+            "analysis_id",
+            "cluster",
+            "umap1",
+            "umap2",
+        ]
+    ],
+    multihot_df,
+    on="analysis_id",
+    how="inner",
+    validate="one_to_one",
 )
 
+anchor_df = (
+    anchor_df
+    .sort_values(
+        "analysis_id"
+    )
+    .reset_index(
+        drop=True
+    )
+)
+
+respondent_anchors = []
+
+for _, row in anchor_df.iterrows():
+
+    feature_indexes = []
+    squared_norm = 0.0
+
+    for index, feature in enumerate(
+        multihot_feature_order
+    ):
+
+        if int(row[feature]) == 1:
+
+            feature_indexes.append(
+                index
+            )
+
+            weight = feature_weights[
+                feature
+            ]
+
+            squared_norm += (
+                weight
+                * weight
+            )
+
+    respondent_anchors.append(
+        [
+            int(
+                row[
+                    "analysis_id"
+                ]
+            ),
+
+            int(
+                row[
+                    "cluster"
+                ]
+            ),
+
+            round(
+                float(
+                    row[
+                        "umap1"
+                    ]
+                ),
+                6,
+            ),
+
+            round(
+                float(
+                    row[
+                        "umap2"
+                    ]
+                ),
+                6,
+            ),
+
+            round(
+                squared_norm,
+                10,
+            ),
+
+            feature_indexes,
+        ]
+    )
 
 model_data = {
     "version":
@@ -1268,46 +1369,51 @@ model_data = {
             "category_weights"
         ],
 
-    "pca": {
-        "mean":
-            pca_model[
-                "pca"
-            ][
-                "mean"
-            ],
+    "map": {
+        "method":
+            "UMAP",
 
-        "components":
-            pca_model[
-                "pca"
-            ][
-                "components"
-            ],
+        "dimensions":
+            2,
 
-        "explainedVarianceRatio":
-            explained_variance_ratio,
-
-        "pc1ExplainedPercent":
-            (
-                explained_variance_ratio[
-                    0
+        "nNeighbors":
+            int(
+                umap_summary[
+                    "n_neighbors"
                 ]
-                * 100
             ),
 
-        "pc2ExplainedPercent":
-            (
-                explained_variance_ratio[
-                    1
+        "minDist":
+            float(
+                umap_summary[
+                    "min_dist"
                 ]
-                * 100
             ),
 
-        "cumulativeExplainedPercent":
-            (
-                sum(
-                    explained_variance_ratio
-                )
-                * 100
+        "metric":
+            umap_summary[
+                "metric"
+            ],
+
+        "randomState":
+            int(
+                umap_summary[
+                    "random_state"
+                ]
+            ),
+
+        "trustworthiness":
+            float(
+                umap_summary[
+                    "trustworthiness"
+                ]
+            ),
+
+        "trustworthinessSampleSize":
+            int(
+                umap_summary[
+                    "trustworthiness_sample_size"
+                ]
             ),
     },
 
@@ -1316,10 +1422,13 @@ model_data = {
             "cluster_centers_weighted"
         ],
 
+    "respondentAnchors":
+        respondent_anchors,
+
     "notes": {
         "map":
             (
-                "PCAによる2次元表示。"
+                "UMAPによる2次元表示。"
                 "技術スタック全体の距離判定には使用しない。"
             ),
 
@@ -1327,6 +1436,15 @@ model_data = {
             (
                 "最も近いクラスタは、"
                 "カテゴリ重み付き131次元空間で判定する。"
+            ),
+
+        "selectedPosition":
+            (
+                "Base・Patternの表示位置は、"
+                "PythonバックエンドのUMAP transformで計算する。"
+                "バックエンドが利用できない場合は、"
+                "カテゴリ重み付き131次元空間で最も近い既存回答者の"
+                "UMAP座標へフォールバックする。"
             ),
     },
 }
@@ -1398,48 +1516,19 @@ if len(feature_definitions) != 131:
     )
 
 
-if len(
-    model_data[
-        "pca"
-    ][
-        "mean"
-    ]
-) != 131:
+if model_data["map"]["method"] != "UMAP":
 
     raise ValueError(
-        "PCA平均ベクトルが"
-        "131次元ではありません。"
+        "マップ手法がUMAPではありません。"
     )
 
 
-if len(
-    model_data[
-        "pca"
-    ][
-        "components"
-    ]
-) != 2:
+if len(model_data["respondentAnchors"]) != len(multihot_df):
 
     raise ValueError(
-        "PCA componentsが"
-        "2成分ではありません。"
+        "UMAP表示用アンカー数が"
+        "分析対象人数と一致しません。"
     )
-
-
-for component in (
-    model_data[
-        "pca"
-    ][
-        "components"
-    ]
-):
-
-    if len(component) != 131:
-
-        raise ValueError(
-            "PCA componentが"
-            "131次元ではありません。"
-        )
 
 
 if len(
