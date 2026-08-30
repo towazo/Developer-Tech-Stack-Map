@@ -21,15 +21,26 @@ os.environ.setdefault("TEMP", str(TMP_DIR))
 
 import joblib
 import numpy as np
+import pandas as pd
 
 
 PROCESSED_DIR = ROOT_DIR / "data" / "processed"
 UMAP_MODEL_PATH = PROCESSED_DIR / "umap" / "umap_reducer.joblib"
+MULTIHOT_PATH = PROCESSED_DIR / "multihot_1_0pct.csv"
+UMAP_COORDINATES_PATH = PROCESSED_DIR / "umap" / "umap_coordinates.csv"
 TECHNOLOGIES_PATH = ROOT_DIR / "public" / "data" / "technologies.json"
-MODEL_PATH = ROOT_DIR / "public" / "data" / "model.json"
+METADATA_PATH = PROCESSED_DIR / "analysis_metadata.csv"
 
 HOST = "127.0.0.1"
 PORT = 8000
+NEIGHBOR_COUNT = 500
+METADATA_FIELDS = {
+    "DevType": {"key": "devType", "label": "職種"},
+    "OrgSize": {"key": "orgSize", "label": "企業規模"},
+    "Industry": {"key": "industry", "label": "業界"},
+    "RemoteWork": {"key": "remoteWork", "label": "働き方"},
+    "Age": {"key": "age", "label": "年代"},
+}
 
 
 def load_json(path):
@@ -46,20 +57,59 @@ def load_runtime():
 
     reducer = joblib.load(UMAP_MODEL_PATH)
     technologies = load_json(TECHNOLOGIES_PATH)
-    model = load_json(MODEL_PATH)
+    multihot_df = pd.read_csv(MULTIHOT_PATH)
+    coordinates_df = pd.read_csv(UMAP_COORDINATES_PATH)
+    metadata_df = pd.read_csv(METADATA_PATH)
 
-    feature_count = int(model["featureCount"])
+    feature_order = [
+        column for column in multihot_df.columns if column != "analysis_id"
+    ]
+    feature_count = len(feature_order)
     weight_vector = np.zeros(feature_count, dtype=np.float32)
 
     for category in technologies["categories"]:
         for technology in category["technologies"]:
             weight_vector[int(technology["index"])] = float(technology["weight"])
 
+    if list(multihot_df.columns[1:]) != feature_order:
+        raise ValueError("multihot feature order does not match technologies.json.")
+
+    coordinates_df = coordinates_df.sort_values("analysis_id").reset_index(drop=True)
+    multihot_df = multihot_df.sort_values("analysis_id").reset_index(drop=True)
+    metadata_df = metadata_df.sort_values("analysis_id").reset_index(drop=True)
+
+    if not multihot_df["analysis_id"].equals(coordinates_df["analysis_id"]):
+        raise ValueError("multihot rows and UMAP coordinate rows do not match.")
+
+    if not metadata_df["analysis_id"].equals(coordinates_df["analysis_id"]):
+        raise ValueError("metadata rows and UMAP coordinate rows do not match.")
+
+    technology_by_feature = {}
+    for category in technologies["categories"]:
+        for technology in category["technologies"]:
+            technology_by_feature[technology["feature"]] = {
+                "category": category["key"],
+                "categoryLabel": category["label"],
+                "name": technology["name"],
+            }
+
     return {
         "reducer": reducer,
         "feature_count": feature_count,
+        "feature_order": feature_order,
         "weight_vector": weight_vector,
-        "map": model.get("map", {}),
+        "umap_coordinates": coordinates_df[["umap1", "umap2"]].to_numpy(
+            dtype=np.float32
+        ),
+        "multihot": multihot_df[feature_order].to_numpy(dtype=np.float32),
+        "metadata": metadata_df,
+        "technology_by_feature": technology_by_feature,
+        "map": {
+            "method": "UMAP",
+            "dimensions": 2,
+            "neighborBasis": "umap_2d",
+            "neighborCount": NEIGHBOR_COUNT,
+        },
     }
 
 
@@ -90,12 +140,127 @@ def make_weighted_vector(selected_indexes):
 def transform_selected_indexes(selected_indexes):
     weighted_vector = make_weighted_vector(selected_indexes)
     coordinate = RUNTIME["reducer"].transform(weighted_vector)[0]
+    neighborhood = find_neighborhood(coordinate)
 
     return {
         "x": round(float(coordinate[0]), 6),
         "y": round(float(coordinate[1]), 6),
         "method": "UMAP.transform",
         "selectedCount": len(selected_indexes),
+        "neighborhood": neighborhood,
+    }
+
+
+def find_neighborhood(coordinate):
+    center = np.array(
+        [
+            float(coordinate[0]),
+            float(coordinate[1]),
+        ],
+        dtype=np.float32,
+    )
+
+    differences = RUNTIME["umap_coordinates"] - center
+    squared_distances = np.einsum(
+        "ij,ij->i",
+        differences,
+        differences,
+    )
+    squared_distances = np.maximum(squared_distances, 0)
+
+    neighbor_count = min(NEIGHBOR_COUNT, len(squared_distances))
+    neighbor_indexes = np.argpartition(
+        squared_distances,
+        neighbor_count - 1,
+    )[:neighbor_count]
+
+    neighbor_indexes = neighbor_indexes[
+        np.argsort(squared_distances[neighbor_indexes])
+    ]
+
+    map_distances = np.sqrt(squared_distances[neighbor_indexes])
+    statistics = calculate_neighborhood_statistics(neighbor_indexes)
+
+    return {
+        "basis": "umap_2d",
+        "count": neighbor_count,
+        "radius": round(float(map_distances[-1]), 6),
+        "statistics": statistics,
+    }
+
+
+def calculate_neighborhood_statistics(neighbor_indexes):
+    count = len(neighbor_indexes)
+    total_count = len(RUNTIME["umap_coordinates"])
+    neighborhood_multihot = RUNTIME["multihot"][neighbor_indexes]
+    overall_multihot = RUNTIME["multihot"]
+
+    neighborhood_rates = neighborhood_multihot.mean(axis=0) * 100
+    overall_rates = overall_multihot.mean(axis=0) * 100
+    differences = neighborhood_rates - overall_rates
+    top_indexes = np.argsort(-differences)[:10]
+
+    top_technologies = []
+    for rank, feature_index in enumerate(top_indexes, start=1):
+        feature = RUNTIME["feature_order"][feature_index]
+        technology = RUNTIME["technology_by_feature"][feature]
+        top_technologies.append(
+            {
+                "rank": rank,
+                **technology,
+                "usageRate": round(float(neighborhood_rates[feature_index]), 4),
+                "overallUsageRate": round(float(overall_rates[feature_index]), 4),
+                "differencePoint": round(float(differences[feature_index]), 4),
+            }
+        )
+
+    neighborhood_metadata = RUNTIME["metadata"].iloc[neighbor_indexes]
+    metadata_statistics = {}
+
+    for column, config in METADATA_FIELDS.items():
+        neighborhood_values = neighborhood_metadata[column].dropna()
+        overall_values = RUNTIME["metadata"][column].dropna()
+        neighborhood_value_rates = neighborhood_values.value_counts(normalize=True) * 100
+        overall_value_rates = overall_values.value_counts(normalize=True) * 100
+
+        items = []
+        for value, usage_rate in neighborhood_value_rates.items():
+            overall_rate = float(overall_value_rates.get(value, 0.0))
+            items.append(
+                {
+                    "value": str(value),
+                    "usageRate": round(float(usage_rate), 4),
+                    "overallRate": round(overall_rate, 4),
+                    "differencePoint": round(float(usage_rate) - overall_rate, 4),
+                }
+            )
+
+        items.sort(key=lambda item: item["differencePoint"], reverse=True)
+        for rank, item in enumerate(items[:3], start=1):
+            item["rank"] = rank
+
+        metadata_statistics[config["key"]] = {
+            "label": config["label"],
+            "answered": int(len(neighborhood_values)),
+            "items": items[:3],
+        }
+
+    work_experience = pd.to_numeric(
+        neighborhood_metadata["WorkExp"],
+        errors="coerce",
+    ).dropna()
+
+    return {
+        "count": count,
+        "rate": round(count / total_count * 100, 4),
+        "topTechnologies": top_technologies,
+        "metadata": metadata_statistics,
+        "workExperience": {
+            "answered": int(len(work_experience)),
+            "median": round(float(work_experience.median()), 4),
+            "q1": round(float(work_experience.quantile(0.25)), 4),
+            "q3": round(float(work_experience.quantile(0.75)), 4),
+        },
     }
 
 
