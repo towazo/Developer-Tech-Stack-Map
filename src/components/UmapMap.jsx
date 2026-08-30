@@ -1,10 +1,8 @@
 import { useState } from "react";
 import * as d3 from "d3";
-import { clusterColors, clusterLabels } from "../config/clusters";
 
 export default function UmapMap({
   points,
-  clusters,
   basePosition,
   patternPositions,
   neighborhoods,
@@ -54,7 +52,6 @@ export default function UmapMap({
       x: point.x,
       y: point.y,
     })),
-    ...clusters.map((cluster) => cluster.center),
     ...(basePosition ? [basePosition] : []),
     ...Object.values(patternPositions).filter(Boolean),
   ];
@@ -138,43 +135,10 @@ export default function UmapMap({
           cx={xScale(point.x)}
           cy={yScale(point.y)}
           r={3}
-          fill={clusterColors[point.cluster]}
-          opacity={0.36}
+          fill="#64748b"
+          opacity={0.48}
         />
       ))}
-
-      {clusters.map((cluster) => {
-        const centerX = xScale(cluster.center.x);
-        const centerY = yScale(cluster.center.y);
-
-        return (
-          <g key={`cluster-${cluster.id}`}>
-            <rect
-              x={centerX - 6}
-              y={centerY - 6}
-              width={12}
-              height={12}
-              fill={clusterColors[cluster.id]}
-              stroke="white"
-              strokeWidth={2}
-              transform={`rotate(45 ${centerX} ${centerY})`}
-            />
-            <text
-              x={centerX + 12}
-              y={centerY + 4}
-              fill="white"
-              fontSize={12}
-              fontWeight="bold"
-              stroke="rgba(15, 15, 15, 0.85)"
-              strokeWidth={4}
-              paintOrder="stroke"
-              pointerEvents="none"
-            >
-              {clusterLabels[cluster.id]}
-            </text>
-          </g>
-        );
-      })}
 
       {neighborhoodEntries.map(([name, neighborhood]) => {
         const center = getNeighborhoodCenter(name);
@@ -245,7 +209,7 @@ export default function UmapMap({
               strokeWidth={5}
               paintOrder="stroke"
             >
-              Base
+              現在の技術
             </text>
           )}
         </g>
@@ -301,7 +265,7 @@ export default function UmapMap({
                   strokeWidth={5}
                   paintOrder="stroke"
                 >
-                  Pattern {patternName}
+                  学習プラン {patternName}
                 </text>
               )}
             </g>

@@ -1,5 +1,4 @@
 import UmapMap from "./UmapMap";
-import { clusterColors, clusterLabels } from "../config/clusters";
 
 const patternColors = {
   A: "#ffdd57",
@@ -9,24 +8,22 @@ const patternColors = {
 
 export default function UmapMapSection({
   mapData,
-  clusterData,
   basePosition,
   patternPositions,
   neighborhoods,
 }) {
   return (
     <div className="umap-map-section">
-      {mapData && clusterData ? (
+      {mapData ? (
         <div>
           <div className="umap-map-frame">
             <UmapMap
               points={mapData.points}
-              clusters={clusterData.clusters}
               basePosition={basePosition}
               patternPositions={patternPositions}
               neighborhoods={neighborhoods}
             />
-            <MapOverlayLegend clusters={clusterData.clusters} />
+            <MapOverlayLegend />
           </div>
 
         </div>
@@ -37,19 +34,10 @@ export default function UmapMapSection({
   );
 }
 
-function MapOverlayLegend({ clusters }) {
+function MapOverlayLegend() {
   return (
     <div className="umap-map-overlay-legend" aria-label="マップの凡例">
       <strong className="umap-map-overlay-title">凡例</strong>
-
-      <div className="umap-cluster-legend">
-        {clusters.map((cluster) => (
-          <span key={cluster.id}>
-            <i style={{ backgroundColor: clusterColors[cluster.id] }} />
-            {clusterLabels[cluster.id]}
-          </span>
-        ))}
-      </div>
 
       <LegendRow
         graphic={<circle cx="22" cy="10" r="3" fill="#64748b" opacity="0.7" />}
@@ -57,7 +45,7 @@ function MapOverlayLegend({ clusters }) {
       />
       <LegendRow
         graphic={<circle cx="22" cy="10" r="6" fill="white" stroke="black" strokeWidth="2" />}
-        label="Base"
+        label="現在の技術"
       />
       <LegendRow
         graphic={
@@ -67,7 +55,7 @@ function MapOverlayLegend({ clusters }) {
             <circle cx="36" cy="10" r="5" fill={patternColors.C} stroke="white" />
           </>
         }
-        label="Pattern A / B / C"
+        label="学習プラン A / B / C"
       />
       <LegendRow
         graphic={
@@ -82,11 +70,11 @@ function MapOverlayLegend({ clusters }) {
             strokeDasharray="4 3"
           />
         }
-        label="近傍500人"
+        label="似ているエンジニア500人"
       />
       <LegendRow
         graphic={<line x1="4" y1="10" x2="40" y2="10" stroke={patternColors.A} strokeWidth="3" />}
-        label="Baseからの変化"
+        label="現在からの変化"
       />
     </div>
   );

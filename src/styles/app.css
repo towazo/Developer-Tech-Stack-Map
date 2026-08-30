@@ -188,28 +188,6 @@ hr {
   font-size: 0.78rem;
 }
 
-.umap-cluster-legend {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.25rem 0.65rem;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-}
-
-.umap-cluster-legend span {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.umap-cluster-legend i {
-  flex: 0 0 auto;
-  width: 8px;
-  height: 8px;
-}
-
 .umap-overlay-legend-row {
   display: flex;
   align-items: center;
@@ -715,6 +693,8 @@ hr {
 
 #content .app-footer {
   padding: 0.75rem 0;
+  background-color: #151922;
+  color: #a8b0bd;
 }
 
 #content .app-footer .content,

@@ -41,7 +41,7 @@ export default function RespondentTrendPieChart({ metadataKey, items }) {
         className="respondent-trend-pie"
         viewBox="0 0 200 200"
         role="img"
-        aria-label="近傍回答者の構成比を示す円グラフ"
+        aria-label="似ているエンジニアの構成比を示す円グラフ"
       >
         <g transform="translate(100, 100)">
           {slices.map((slice, index) => (

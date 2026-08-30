@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import RespondentTrendPieChart from "./RespondentTrendPieChart";
 
 const STACK_LABELS = {
-  base: "Base",
-  A: "Pattern A",
-  B: "Pattern B",
-  C: "Pattern C",
+  base: "現在の技術",
+  A: "学習プラン A",
+  B: "学習プラン B",
+  C: "学習プラン C",
 };
 
 export default function NeighborhoodDetail({ neighborhoods, onBack }) {
@@ -25,8 +25,8 @@ export default function NeighborhoodDetail({ neighborhoods, onBack }) {
   if (availableKeys.length === 0) {
     return (
       <div className="box neighborhood-detail">
-        <h2 className="title is-4">近傍回答者の詳細</h2>
-        <p>Baseの技術を選択すると、近傍500人の統計を表示します。</p>
+        <h2 className="title is-4">似ているエンジニアの傾向</h2>
+        <p>現在使っている技術を選択すると、技術構成が似ている500人の傾向を表示します。</p>
         <BackButton onBack={onBack} />
       </div>
     );
@@ -39,7 +39,7 @@ export default function NeighborhoodDetail({ neighborhoods, onBack }) {
 
   return (
     <div className="box neighborhood-detail">
-      <h2 className="title is-4">近傍回答者の詳細</h2>
+      <h2 className="title is-4">似ているエンジニアの傾向</h2>
 
       <div className="tabs is-toggle">
         <ul>
@@ -151,7 +151,7 @@ function BackButton({ onBack }) {
   return (
     <div className="neighborhood-detail-back">
       <button type="button" className="button" onClick={onBack}>
-        マップへ戻る
+        技術スタックマップへ戻る
       </button>
     </div>
   );
