@@ -31,8 +31,8 @@ UMAP_COORDINATES_PATH = PROCESSED_DIR / "umap" / "umap_coordinates.csv"
 TECHNOLOGIES_PATH = ROOT_DIR / "public" / "data" / "technologies.json"
 METADATA_PATH = PROCESSED_DIR / "analysis_metadata.csv"
 
-HOST = "127.0.0.1"
-PORT = 8000
+HOST = os.environ.get("HOST", "127.0.0.1")
+PORT = int(os.environ.get("PORT", "8000"))
 NEIGHBOR_COUNT = 500
 METADATA_FIELDS = {
     "DevType": {"key": "devType", "label": "職種"},
@@ -355,7 +355,7 @@ def main():
     print("UMAP API server started", flush=True)
     print("======================================", flush=True)
     print(f"URL: http://{HOST}:{PORT}", flush=True)
-    print("Health: http://127.0.0.1:8000/api/health", flush=True)
+    print(f"Health: http://{HOST}:{PORT}/api/health", flush=True)
     print(flush=True)
     print("Press Ctrl+C to stop.", flush=True)
 

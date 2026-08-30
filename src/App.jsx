@@ -5,6 +5,7 @@ import NeighborhoodDetail from "./components/NeighborhoodDetail";
 import Footer from "./components/Footer";
 
 export default function App() {
+  const apiBaseUrl = (import.meta.env.VITE_UMAP_API_URL || "").replace(/\/$/, "");
   const [mapData, setMapData] = useState(null);
   const [technologyData, setTechnologyData] = useState(null);
   const [selectedBase, setSelectedBase] = useState([]);
@@ -26,6 +27,7 @@ export default function App() {
     B: null,
     C: null,
   });
+  const [apiError, setApiError] = useState(null);
 
   //useEffect→あるタイミングで処理を実行するモノ
   useEffect(() => {
@@ -70,6 +72,7 @@ export default function App() {
         B: null,
         C: null,
       });
+      setApiError(null);
 
 
       return () => {
@@ -83,7 +86,7 @@ export default function App() {
     // の両方を計算する
     const fetchUmapPosition = async (selectedIndexes) => {
       try {
-        const response = await fetch("/api/umap-position", {
+        const response = await fetch(`${apiBaseUrl}/api/umap-position`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -112,9 +115,9 @@ export default function App() {
           neighborhood: data.neighborhood ?? null,
         };
       } catch (error) {
-        console.warn(
-          "UMAP APIが利用できないため、近傍アンカー座標を使用します。",
-          error
+        console.error("UMAP APIを利用できません。", error);
+        setApiError(
+          "UMAPバックエンドに接続できません。公開環境のAPI URL設定を確認してください。"
         );
 
         return null;
@@ -131,6 +134,7 @@ export default function App() {
     };
 
     const updateStackResults = async () => {
+      setApiError(null);
       // -------------------------
       // Base
       // -------------------------
@@ -273,6 +277,12 @@ export default function App() {
           selectedPatterns={selectedPatterns}
           onToggle={toggleTechnology}
         />
+
+        {apiError && (
+          <div className="notification is-danger is-light" role="alert">
+            {apiError}
+          </div>
+        )}
 
         <UmapMapSection
           mapData={mapData}
