@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="footer py-5">
+    <footer className="footer app-footer">
       <div className="content has-text-centered is-size-7 has-text-grey">
         <p className="mb-1">
           Data Source: Stack Overflow Developer Survey 2025

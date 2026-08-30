@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { translateMetadataValue } from "../utils/metadataTranslations";
+import RespondentTrendPieChart from "./RespondentTrendPieChart";
 
 const STACK_LABELS = {
   base: "Base",
@@ -8,11 +8,13 @@ const STACK_LABELS = {
   C: "Pattern C",
 };
 
-export default function NeighborhoodDetail({ neighborhoods }) {
+export default function NeighborhoodDetail({ neighborhoods, onBack }) {
   const availableKeys = Object.keys(STACK_LABELS).filter(
     (key) => neighborhoods?.[key]?.statistics
   );
   const [selectedKey, setSelectedKey] = useState("base");
+  const [selectedTechnologyCategory, setSelectedTechnologyCategory] = useState("language");
+  const [selectedTrendKey, setSelectedTrendKey] = useState("devType");
 
   useEffect(() => {
     if (!availableKeys.includes(selectedKey)) {
@@ -22,17 +24,21 @@ export default function NeighborhoodDetail({ neighborhoods }) {
 
   if (availableKeys.length === 0) {
     return (
-      <div className="box">
+      <div className="box neighborhood-detail">
         <h2 className="title is-4">近傍回答者の詳細</h2>
         <p>Baseの技術を選択すると、近傍500人の統計を表示します。</p>
+        <BackButton onBack={onBack} />
       </div>
     );
   }
 
   const statistics = neighborhoods[selectedKey].statistics;
+  const selectedCategory = statistics.topTechnologiesByCategory.find(
+    (category) => category.key === selectedTechnologyCategory
+  ) ?? statistics.topTechnologiesByCategory[0];
 
   return (
-    <div className="box">
+    <div className="box neighborhood-detail">
       <h2 className="title is-4">近傍回答者の詳細</h2>
 
       <div className="tabs is-toggle">
@@ -45,31 +51,35 @@ export default function NeighborhoodDetail({ neighborhoods }) {
         </ul>
       </div>
 
-      <h3 className="title is-5">{STACK_LABELS[selectedKey]}の近傍</h3>
-      <p>
-        UMAPの2次元マップ上で近い回答者：
-        <strong>{statistics.count.toLocaleString()}人</strong>
-      </p>
-      <p>
-        全回答者に占める割合：
-        <strong>{statistics.rate.toFixed(1)}%</strong>
-      </p>
-
-      <hr />
-
-      <div className="columns is-variable is-6 is-centered pb-5">
+      <div className="columns is-variable is-6 is-centered pb-2">
         <div className="column is-6">
-          <h4 className="title is-6">特徴的な利用技術 Top10</h4>
+          <h4 className="title is-6">ジャンル別の特徴的な利用技術 Top3</h4>
 
-          {statistics.topTechnologies.map((technology) => (
-            <div key={technology.rank} className="mb-4">
+          <div className="field mb-4">
+            <label className="label" htmlFor="technology-category-select">
+              表示するジャンル
+            </label>
+            <div className="control">
+              <div className="select is-fullwidth">
+                <select
+                  id="technology-category-select"
+                  value={selectedCategory.key}
+                  onChange={(event) => setSelectedTechnologyCategory(event.target.value)}
+                >
+                  {statistics.topTechnologiesByCategory.map((category) => (
+                    <option key={category.key} value={category.key}>
+                      {category.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {selectedCategory.technologies.map((technology) => (
+            <div key={technology.name} className="mb-4">
               <div className="is-flex is-justify-content-space-between">
-                <div>
-                  <strong>{technology.name}</strong>
-                  <span className="tag is-light ml-2">
-                    {technology.categoryLabel}
-                  </span>
-                </div>
+                <strong>{technology.rank}. {technology.name}</strong>
                 <strong>{technology.usageRate.toFixed(1)}%</strong>
               </div>
 
@@ -88,42 +98,61 @@ export default function NeighborhoodDetail({ neighborhoods }) {
               </p>
             </div>
           ))}
+
+          <div className="mt-5 pt-4 respondent-work-experience">
+            <h4 className="title is-6 mb-3">実務経験年数</h4>
+            <p>
+              中央値：
+              <strong>{statistics.workExperience.median.toFixed(0)}年</strong>
+            </p>
+            <p className="is-size-7 has-text-grey mt-1">
+              中央50%の範囲：{statistics.workExperience.q1.toFixed(0)}年 ～
+              {statistics.workExperience.q3.toFixed(0)}年
+            </p>
+          </div>
         </div>
 
         <div className="column is-6">
           <h4 className="title is-6">回答者の傾向</h4>
 
-          {Object.entries(statistics.metadata).map(([metadataKey, metadata]) => (
-            <div key={metadataKey} className="metadata-group">
-              <strong>{metadata.label}</strong>
-
-              {metadata.items.map((item) => (
-                <div key={`${metadataKey}-${item.value}`} className="mt-1">
-                  <p>
-                    {item.rank}. {translateMetadataValue(metadataKey, item.value)}
-                  </p>
-                  <p className="is-size-7 has-text-grey">
-                    近傍：{item.usageRate.toFixed(1)}% ／ 全体：
-                    {item.overallRate.toFixed(1)}% ／ 差：
-                    {item.differencePoint >= 0 ? "+" : ""}
-                    {item.differencePoint.toFixed(1)}pt
-                  </p>
-                </div>
-              ))}
+          <div className="field mb-4">
+            <label className="label" htmlFor="respondent-trend-select">
+              表示する項目
+            </label>
+            <div className="control">
+              <div className="select is-fullwidth">
+                <select
+                  id="respondent-trend-select"
+                  value={selectedTrendKey}
+                  onChange={(event) => setSelectedTrendKey(event.target.value)}
+                >
+                  {Object.entries(statistics.metadata).map(([metadataKey, metadata]) => (
+                    <option key={metadataKey} value={metadataKey}>
+                      {metadata.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          ))}
+          </div>
 
-          <h4 className="title is-6 mt-4">実務経験年数</h4>
-          <p>
-            中央値：
-            <strong>{statistics.workExperience.median.toFixed(0)}年</strong>
-            <span className="is-size-7 has-text-grey ml-4">
-              中央50%の範囲：{statistics.workExperience.q1.toFixed(0)}年 ～
-              {statistics.workExperience.q3.toFixed(0)}年
-            </span>
-          </p>
+          <RespondentTrendPieChart
+            metadataKey={selectedTrendKey}
+            items={statistics.metadata[selectedTrendKey].items}
+          />
+          <BackButton onBack={onBack} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function BackButton({ onBack }) {
+  return (
+    <div className="neighborhood-detail-back">
+      <button type="button" className="button" onClick={onBack}>
+        マップへ戻る
+      </button>
     </div>
   );
 }

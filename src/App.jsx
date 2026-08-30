@@ -6,7 +6,11 @@ import Footer from "./components/Footer";
 import { analyzeTechnologyStack } from "./utils/browserAnalysis";
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState(
+    window.location.hash === "#details" ? "details" : "map"
+  );
   const [mapData, setMapData] = useState(null);
+  const [clusterData, setClusterData] = useState(null);
   const [technologyData, setTechnologyData] = useState(null);
   const [selectedBase, setSelectedBase] = useState([]);
   const [activeTab, setActiveTab] = useState("base");
@@ -28,6 +32,29 @@ export default function App() {
     C: null,
   });
   const [analysisError, setAnalysisError] = useState(null);
+  const [isTechnologySidebarOpen, setIsTechnologySidebarOpen] = useState(true);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentPage(window.location.hash === "#details" ? "details" : "map");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  const navigateToPage = (page) => {
+    const nextHash = page === "details" ? "#details" : "#map";
+
+    if (window.location.hash === nextHash) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    window.location.hash = nextHash;
+  };
 
   //useEffect→あるタイミングで処理を実行するモノ
   useEffect(() => {
@@ -71,6 +98,12 @@ export default function App() {
         A: null,
         B: null,
         C: null,
+      });
+
+    fetch("/data/cluster_summary.json")
+      .then((response) => response.json())
+      .then((data) => {
+        setClusterData(data);
       });
       setAnalysisError(null);
 
@@ -236,29 +269,69 @@ export default function App() {
           Developer Tech Stack Map
         </h1>
 
-        <TechnologyPanel
-          technologyData={technologyData}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          selectedBase={selectedBase}
-          selectedPatterns={selectedPatterns}
-          onToggle={toggleTechnology}
-        />
-
-        {analysisError && (
+        {currentPage === "map" && analysisError && (
           <div className="notification is-danger is-light" role="alert">
             {analysisError}
           </div>
         )}
 
-        <UmapMapSection
-          mapData={mapData}
-          basePosition={basePosition}
-          patternPositions={patternPositions}
-          neighborhoods={neighborhoods}
-        />
+        {currentPage === "map" && (
+          <>
+            <div className="visualization-workspace-shell">
+              <div className="visualization-workspace">
+                <main className="visualization-main">
+                  <UmapMapSection
+                    mapData={mapData}
+                    clusterData={clusterData}
+                    basePosition={basePosition}
+                    patternPositions={patternPositions}
+                    neighborhoods={neighborhoods}
+                  />
+                </main>
 
-        <NeighborhoodDetail neighborhoods={neighborhoods} />
+                <aside
+                  className={`technology-sidebar ${isTechnologySidebarOpen ? "is-open" : "is-closed"}`}
+                  aria-label="技術を選択"
+                >
+                  <button
+                    type="button"
+                    className="technology-sidebar-toggle"
+                    aria-label={isTechnologySidebarOpen ? "技術選択を閉じる" : "技術選択を開く"}
+                    aria-expanded={isTechnologySidebarOpen}
+                    title={isTechnologySidebarOpen ? "技術選択を閉じる" : "技術選択を開く"}
+                    onClick={() => setIsTechnologySidebarOpen((isOpen) => !isOpen)}
+                  >
+                    <span aria-hidden="true">{isTechnologySidebarOpen ? "›" : "‹"}</span>
+                  </button>
+                  <TechnologyPanel
+                    technologyData={technologyData}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    selectedBase={selectedBase}
+                    selectedPatterns={selectedPatterns}
+                    onToggle={toggleTechnology}
+                  />
+                  <div className="technology-sidebar-page-action">
+                    <button
+                      type="button"
+                      className="button is-info is-fullwidth"
+                      onClick={() => navigateToPage("details")}
+                    >
+                      近傍回答者の詳細を見る
+                    </button>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </>
+        )}
+
+        {currentPage === "details" && (
+          <NeighborhoodDetail
+            neighborhoods={neighborhoods}
+            onBack={() => navigateToPage("map")}
+          />
+        )}
 
         <Footer />
       </div>

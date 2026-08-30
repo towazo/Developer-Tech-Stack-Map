@@ -1,0 +1,89 @@
+{
+  "count": 6,
+  "clusters": [
+    {
+      "id": 0,
+      "count": 3183,
+      "rate": 20.8872,
+      "center": {
+        "x": -2.718581,
+        "y": 7.55381
+      },
+      "representativeTechnologies": [
+        "C#",
+        "ASP.NET Core",
+        "Microsoft SQL Server"
+      ]
+    },
+    {
+      "id": 1,
+      "count": 1929,
+      "rate": 12.6583,
+      "center": {
+        "x": 0.549001,
+        "y": 3.680882
+      },
+      "representativeTechnologies": [
+        "PHP",
+        "Composer",
+        "MySQL"
+      ]
+    },
+    {
+      "id": 2,
+      "count": 3006,
+      "rate": 19.7257,
+      "center": {
+        "x": -0.083835,
+        "y": 1.265089
+      },
+      "representativeTechnologies": [
+        "React",
+        "Node.js",
+        "Next.js"
+      ]
+    },
+    {
+      "id": 3,
+      "count": 3123,
+      "rate": 20.4935,
+      "center": {
+        "x": -2.359119,
+        "y": 1.890313
+      },
+      "representativeTechnologies": [
+        "Python",
+        "FastAPI",
+        "Pip"
+      ]
+    },
+    {
+      "id": 4,
+      "count": 2199,
+      "rate": 14.4301,
+      "center": {
+        "x": -1.358418,
+        "y": -0.718316
+      },
+      "representativeTechnologies": [
+        "Java",
+        "Spring Boot",
+        "Maven (build tool)"
+      ]
+    },
+    {
+      "id": 5,
+      "count": 1799,
+      "rate": 11.8052,
+      "center": {
+        "x": -0.03287,
+        "y": 2.516288
+      },
+      "representativeTechnologies": [
+        "Pip",
+        "SQLite",
+        "Node.js"
+      ]
+    }
+  ]
+}
