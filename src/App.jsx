@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react";
 import TechnologyPanel from "./components/TechnologyPanel";
-import StackResult from "./components/StackResult";
-import PcaMapSection from "./components/PcaMapSection";
-import ClusterDetail from "./components/ClusterDetail";
+import UmapMapSection from "./components/UmapMapSection";
+import NeighborhoodDetail from "./components/NeighborhoodDetail";
 import Footer from "./components/Footer";
-import {
-  createBinaryVector,
-  createWeightVector,
-  applyWeights,
-  findNearestAnchorPosition,
-  findNearestCluster,
-} from "./utils/techVector";
 
 export default function App() {
   const [mapData, setMapData] = useState(null);
-  const [clusterData, setClusterData] = useState(null);
   const [technologyData, setTechnologyData] = useState(null);
   const [selectedBase, setSelectedBase] = useState([]);
   const [activeTab, setActiveTab] = useState("base");
@@ -23,14 +14,13 @@ export default function App() {
     B: [],
     C: [],
   });
-  const [modelData, setModelData] = useState(null);
   const [basePosition, setBasePosition] = useState(null);
   const [patternPositions, setPatternPositions] = useState({
     A: null,
     B: null,
     C: null,
   });
-  const [nearestClusters, setNearestClusters] = useState({
+  const [neighborhoods, setNeighborhoods] = useState({
     base: null,
     A: null,
     B: null,
@@ -45,12 +35,6 @@ export default function App() {
         setMapData(data);
       });
 
-    fetch("/data/clusters.json")
-      .then((response) => response.json())
-      .then((data) => {
-        setClusterData(data);
-      });
-
     fetch("/data/technologies.json")
       .then((response) => response.json())
       .then((data) => {
@@ -58,19 +42,13 @@ export default function App() {
         console.log("technologies.json:", data);
       });
 
-    fetch("/data/model.json")
-      .then((response) => response.json())
-      .then((data) => {
-        setModelData(data);
-        console.log("model.json:", data);
-      });
   }, []);
 
   useEffect(() => {
     let isCancelled = false;
 
     // 必要なデータがまだ読み込まれていなければ何もしない
-    if (!technologyData || !modelData) {
+    if (!technologyData) {
       return () => {
         isCancelled = true;
       };
@@ -86,12 +64,13 @@ export default function App() {
         C: null,
       });
 
-      setNearestClusters({
+      setNeighborhoods({
         base: null,
         A: null,
         B: null,
         C: null,
       });
+
 
       return () => {
         isCancelled = true;
@@ -99,19 +78,10 @@ export default function App() {
     }
 
     // 131技術それぞれの重み
-    const weightVector = createWeightVector(
-      technologyData.categories,
-      modelData.featureCount
-    );
-
     // 技術一覧から
     // ① UMAP上の表示位置
-    // ② 最も近いクラスタ
     // の両方を計算する
-    const fetchUmapPosition = async (
-      selectedIndexes,
-      fallbackPosition
-    ) => {
+    const fetchUmapPosition = async (selectedIndexes) => {
       try {
         const response = await fetch("/api/umap-position", {
           method: "POST",
@@ -139,6 +109,7 @@ export default function App() {
           x: data.x,
           y: data.y,
           method: data.method,
+          neighborhood: data.neighborhood ?? null,
         };
       } catch (error) {
         console.warn(
@@ -146,40 +117,16 @@ export default function App() {
           error
         );
 
-        return fallbackPosition;
+        return null;
       }
     };
 
     const calculateStack = async (selectedIndexes) => {
-      const binaryVector = createBinaryVector(
-        selectedIndexes,
-        modelData.featureCount
-      );
-
-      const weightedVector = applyWeights(
-        binaryVector,
-        weightVector
-      );
-
-      const fallbackPosition = findNearestAnchorPosition(
-        weightedVector,
-        weightVector,
-        modelData.respondentAnchors
-      );
-
-      const nearestCluster = findNearestCluster(
-        weightedVector,
-        modelData.clusterCentersWeighted
-      );
-
-      const position = await fetchUmapPosition(
-        selectedIndexes,
-        fallbackPosition
-      );
+      const position = await fetchUmapPosition(selectedIndexes);
 
       return {
         position,
-        nearestCluster,
+        neighborhood: position?.neighborhood ?? null,
       };
     };
 
@@ -232,23 +179,13 @@ export default function App() {
         C: patternResults.C?.position ?? null,
       });
 
-      setNearestClusters({
-        base: baseResult.nearestCluster,
-        A: patternResults.A?.nearestCluster ?? null,
-        B: patternResults.B?.nearestCluster ?? null,
-        C: patternResults.C?.nearestCluster ?? null,
+      setNeighborhoods({
+        base: baseResult.neighborhood,
+        A: patternResults.A?.neighborhood ?? null,
+        B: patternResults.B?.neighborhood ?? null,
+        C: patternResults.C?.neighborhood ?? null,
       });
 
-      console.log(
-        "Baseの最近傍クラスタ:",
-        baseResult.nearestCluster
-      );
-
-      console.log("Patternの最近傍クラスタ:", {
-        A: patternResults.A?.nearestCluster ?? null,
-        B: patternResults.B?.nearestCluster ?? null,
-        C: patternResults.C?.nearestCluster ?? null,
-      });
     };
 
     updateStackResults();
@@ -260,7 +197,6 @@ export default function App() {
     selectedBase,
     selectedPatterns,
     technologyData,
-    modelData,
   ]);
 
   // 技術の選択状態を切り替える関数
@@ -338,21 +274,14 @@ export default function App() {
           onToggle={toggleTechnology}
         />
 
-        <StackResult
-          nearestClusters={nearestClusters}
-          clusterData={clusterData}
-        />
-
-        <PcaMapSection
+        <UmapMapSection
           mapData={mapData}
-          clusterData={clusterData}
           basePosition={basePosition}
           patternPositions={patternPositions}
+          neighborhoods={neighborhoods}
         />
 
-        <ClusterDetail
-          clusterData={clusterData}
-        />
+        <NeighborhoodDetail neighborhoods={neighborhoods} />
 
         <Footer />
       </div>
