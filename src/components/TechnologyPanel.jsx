@@ -178,14 +178,14 @@ export default function TechnologyPanel({
   };
 
   return (
-    <div className="box">
+    <div className="technology-panel">
       <h2 className="title is-4">
         {activeTab === "base"
           ? "Base技術を選択"
           : `Pattern ${activeTab} の追加技術を選択`}
       </h2>
 
-      <div className="tabs is-toggle is-toggle-rounded">
+      <div className="tabs is-toggle">
         <ul>
           <li className={activeTab === "base" ? "is-active" : ""}>
             <a onClick={() => setActiveTab("base")}>

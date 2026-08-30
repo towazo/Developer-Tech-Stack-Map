@@ -12,6 +12,7 @@ body,
 
 body {
   margin: 0;
+  overflow-x: hidden;
   color: #e5e7eb;
 }
 
@@ -22,6 +23,7 @@ body {
 
 .section {
   min-height: 100vh;
+  padding-top: 1.5rem;
   background-color: #151922;
 }
 
@@ -144,6 +146,273 @@ hr {
   background-color: #303b4f;
   border-color: #64748b;
   color: #f8fafc;
+}
+
+.visualization-workspace {
+  position: relative;
+  overflow: visible;
+}
+
+.visualization-workspace-shell {
+  margin-bottom: 1.5rem;
+}
+
+.visualization-main {
+  min-width: 0;
+}
+
+.umap-map-frame {
+  position: relative;
+  top: -1.5rem;
+  width: 80%;
+  margin-left: 7%;
+  margin-bottom: -1.5rem;
+}
+
+.umap-map-overlay-legend {
+  position: absolute;
+  z-index: 5;
+  top: 0.75rem;
+  left: calc(0.75rem - 8.75%);
+  width: min(250px, calc(100% - 1.5rem));
+  color: #e5e7eb;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px #111827;
+  pointer-events: none;
+}
+
+.umap-map-overlay-title {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.78rem;
+}
+
+.umap-cluster-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 0.65rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.umap-cluster-legend span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.umap-cluster-legend i {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+}
+
+.umap-overlay-legend-row {
+  display: flex;
+  align-items: center;
+  min-height: 20px;
+}
+
+.umap-overlay-legend-row svg {
+  flex: 0 0 44px;
+}
+
+.technology-sidebar {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 30;
+  top: -5rem;
+  right: calc((100vw - 100%) / -2);
+  width: min(clamp(330px, 24vw, 390px), calc(100% - 2.25rem));
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-right: 0;
+  background-color: rgba(21, 25, 34, 0.96);
+  box-shadow: -12px 0 28px rgba(0, 0, 0, 0.28);
+  transition: transform 180ms ease;
+}
+
+.technology-sidebar.is-open {
+  transform: translateX(0);
+}
+
+.technology-sidebar.is-closed {
+  transform: translateX(100%);
+}
+
+.technology-sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  left: -2.25rem;
+  width: 2.25rem;
+  height: 2.75rem;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 1px solid #4b5563;
+  border-right: 0;
+  border-radius: 4px 0 0 4px;
+  background-color: rgba(21, 25, 34, 0.96);
+  color: #f8fafc;
+  cursor: pointer;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.technology-sidebar-toggle:hover,
+.technology-sidebar-toggle:focus-visible {
+  background-color: #273244;
+  outline: none;
+}
+
+.technology-sidebar-toggle:focus-visible {
+  box-shadow: 0 0 0 2px #60a5fa;
+}
+
+.technology-panel {
+  min-height: 0;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 transparent;
+}
+
+.technology-sidebar-page-action {
+  flex: 0 0 auto;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+  background-color: #151922;
+}
+
+#content .technology-sidebar-page-action .button {
+  min-height: 2.25rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.technology-panel::-webkit-scrollbar {
+  width: 7px;
+}
+
+.technology-panel::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #4b5563;
+}
+
+#content .technology-panel > .title.is-4 {
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  font-size: 1.05rem;
+}
+
+.technology-panel .tabs {
+  margin-bottom: 0.85rem;
+}
+
+.technology-panel .tabs ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  width: 100%;
+  border-bottom: 0;
+}
+
+.technology-panel .tabs li,
+.technology-panel .tabs a {
+  width: 100%;
+}
+
+.technology-panel .tabs a {
+  min-height: 2.1rem;
+  justify-content: center;
+  padding: 0.45rem 0.35rem;
+  border: 1px solid #4b5563 !important;
+  border-radius: 4px !important;
+  font-size: 0.78rem;
+}
+
+.technology-panel .tabs li.is-active a {
+  border-color: #3e8ed0 !important;
+}
+
+.technology-panel .selected-technologies {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.7rem;
+}
+
+.technology-panel .selected-technologies-header {
+  margin-bottom: 0.4rem;
+}
+
+#content .technology-panel .selected-technology-tag {
+  min-height: 1.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+}
+
+.technology-panel .selected-technologies-count {
+  border-radius: 4px;
+}
+
+.technology-panel .columns {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 0.65rem;
+}
+
+.technology-panel .columns > .column {
+  width: 100%;
+  padding: 0 0 0.65rem;
+}
+
+.technology-panel .columns > .column:first-child {
+  order: 2;
+}
+
+.technology-panel .columns > .column:nth-child(2) {
+  order: 1;
+}
+
+.technology-panel .field,
+.technology-panel .label {
+  margin-bottom: 0.3rem;
+}
+
+.technology-panel .label {
+  font-size: 0.78rem;
+}
+
+.technology-panel .select select,
+.technology-panel .input {
+  height: 2.15rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.technology-panel .buttons {
+  gap: 0.35rem;
+}
+
+#content .technology-panel .button.is-small {
+  height: 1.8rem;
+  margin: 0;
+  padding-right: 0.55rem;
+  padding-left: 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+}
+
+.technology-panel .mb-5 {
+  margin-bottom: 0.5rem !important;
 }
 
 .selected-technologies {
@@ -324,4 +593,160 @@ hr {
   font-size: 1rem;
   line-height: 1.45;
   font-weight: 700;
+}
+
+.respondent-trend-chart {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.respondent-trend-pie {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 1;
+}
+
+.respondent-trend-legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.respondent-trend-legend li {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0;
+}
+
+.respondent-trend-swatch {
+  width: 12px;
+  height: 12px;
+}
+
+.respondent-trend-label {
+  overflow-wrap: anywhere;
+}
+
+.respondent-work-experience {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#content .neighborhood-detail {
+  position: relative;
+  padding: 0.85rem 1rem;
+  font-size: 0.82rem;
+}
+
+#content .neighborhood-detail > .title.is-4 {
+  margin-bottom: 0.85rem;
+  font-size: 1.2rem;
+}
+
+#content .neighborhood-detail .title.is-6 {
+  margin-bottom: 0.7rem;
+  font-size: 0.9rem;
+}
+
+#content .neighborhood-detail p,
+#content .neighborhood-detail .label,
+#content .neighborhood-detail .content {
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+#content .neighborhood-detail .tabs {
+  margin-bottom: 1rem;
+}
+
+#content .neighborhood-detail .tabs a {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+#content .neighborhood-detail .select select {
+  height: 2.1rem;
+  font-size: 0.78rem;
+}
+
+#content .neighborhood-detail .field {
+  margin-bottom: 0.85rem !important;
+}
+
+#content .neighborhood-detail .progress {
+  height: 0.65rem;
+}
+
+#content .neighborhood-detail .respondent-trend-chart {
+  gap: 1rem;
+}
+
+#content .neighborhood-detail .respondent-trend-pie {
+  max-width: 200px;
+}
+
+#content .neighborhood-detail .respondent-trend-legend li {
+  gap: 0.4rem;
+  padding: 0.3rem 0;
+  font-size: 0.75rem;
+}
+
+#content .neighborhood-detail .is-size-7 {
+  font-size: 0.72rem !important;
+  line-height: 1.4;
+}
+
+.neighborhood-detail-back {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.85rem;
+  margin: 0;
+}
+
+#content .neighborhood-detail-back .button {
+  min-height: 2.1rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+}
+
+#content .app-footer {
+  padding: 0.75rem 0;
+}
+
+#content .app-footer .content,
+#content .app-footer p {
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 768px) {
+  .umap-map-frame {
+    top: 0;
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 0;
+  }
+
+  .umap-map-overlay-legend {
+    left: 0.75rem;
+  }
+
+  .respondent-trend-chart {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .respondent-trend-legend {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .technology-sidebar {
+    transition: none;
+  }
 }

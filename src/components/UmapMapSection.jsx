@@ -1,4 +1,5 @@
 import UmapMap from "./UmapMap";
+import { clusterColors, clusterLabels } from "../config/clusters";
 
 const patternColors = {
   A: "#ffdd57",
@@ -8,87 +9,26 @@ const patternColors = {
 
 export default function UmapMapSection({
   mapData,
+  clusterData,
   basePosition,
   patternPositions,
   neighborhoods,
 }) {
   return (
-    <div className="box">
-      <h2 className="subtitle">技術スタックマップ</h2>
-
-      {mapData ? (
+    <div className="umap-map-section">
+      {mapData && clusterData ? (
         <div>
-          <UmapMap
-            points={mapData.points}
-            basePosition={basePosition}
-            patternPositions={patternPositions}
-            neighborhoods={neighborhoods}
-          />
-
-          <div className="content mb-4">
-            <p>
-              回答者の技術スタックをUMAPで2次元に圧縮しています。Baseと各Patternの
-              位置および近傍統計は、ブラウザ内で計算しています。
-            </p>
-
-            <div className="mt-4">
-              <LegendRow
-                graphic={<circle cx="35" cy="12" r="4" fill="#64748b" opacity="0.7" />}
-                label="回答者"
-                description="それぞれの点が1人の回答者を表します"
-              />
-
-              <LegendRow
-                graphic={
-                  <circle cx="35" cy="12" r="7" fill="white" stroke="black" strokeWidth="3" />
-                }
-                label="Base"
-                description="基準として選択した技術スタックです"
-              />
-
-              <LegendRow
-                graphic={
-                  <>
-                    <circle cx="12" cy="12" r="7" fill={patternColors.A} stroke="white" strokeWidth="2" />
-                    <circle cx="35" cy="12" r="7" fill={patternColors.B} stroke="white" strokeWidth="2" />
-                    <circle cx="58" cy="12" r="7" fill={patternColors.C} stroke="white" strokeWidth="2" />
-                  </>
-                }
-                label="Pattern A / B / C"
-                description="Baseに技術を追加した場合の位置です"
-              />
-
-              <LegendRow
-                graphic={
-                  <circle
-                    cx="35"
-                    cy="12"
-                    r="10"
-                    fill="#38bdf8"
-                    fillOpacity="0.12"
-                    stroke="#38bdf8"
-                    strokeWidth="2"
-                    strokeDasharray="4 3"
-                  />
-                }
-                label="近傍500人の範囲"
-                description="2次元マップ上で近い500人が入る円です"
-              />
-
-              <LegendRow
-                graphic={
-                  <line x1="8" y1="12" x2="62" y2="12" stroke={patternColors.A} strokeWidth="3" />
-                }
-                label="BaseとPatternの変化"
-                description="技術を追加したときの位置の変化です"
-              />
-            </div>
-
-            <p className="is-size-7 has-text-grey mt-4">
-              ※ 選択した技術スタックの位置は、131次元で近い回答者のUMAP座標から
-              補間しています。近傍500人は2次元座標上の距離で選んでいます。
-            </p>
+          <div className="umap-map-frame">
+            <UmapMap
+              points={mapData.points}
+              clusters={clusterData.clusters}
+              basePosition={basePosition}
+              patternPositions={patternPositions}
+              neighborhoods={neighborhoods}
+            />
+            <MapOverlayLegend clusters={clusterData.clusters} />
           </div>
+
         </div>
       ) : (
         <p>マップデータを読み込んでいます...</p>
@@ -97,16 +37,68 @@ export default function UmapMapSection({
   );
 }
 
-function LegendRow({ graphic, label, description }) {
+function MapOverlayLegend({ clusters }) {
   return (
-    <div className="is-flex is-align-items-center mb-3">
-      <svg width="70" height="24" viewBox="0 0 70 24" className="mr-3">
+    <div className="umap-map-overlay-legend" aria-label="マップの凡例">
+      <strong className="umap-map-overlay-title">凡例</strong>
+
+      <div className="umap-cluster-legend">
+        {clusters.map((cluster) => (
+          <span key={cluster.id}>
+            <i style={{ backgroundColor: clusterColors[cluster.id] }} />
+            {clusterLabels[cluster.id]}
+          </span>
+        ))}
+      </div>
+
+      <LegendRow
+        graphic={<circle cx="22" cy="10" r="3" fill="#64748b" opacity="0.7" />}
+        label="回答者"
+      />
+      <LegendRow
+        graphic={<circle cx="22" cy="10" r="6" fill="white" stroke="black" strokeWidth="2" />}
+        label="Base"
+      />
+      <LegendRow
+        graphic={
+          <>
+            <circle cx="8" cy="10" r="5" fill={patternColors.A} stroke="white" />
+            <circle cx="22" cy="10" r="5" fill={patternColors.B} stroke="white" />
+            <circle cx="36" cy="10" r="5" fill={patternColors.C} stroke="white" />
+          </>
+        }
+        label="Pattern A / B / C"
+      />
+      <LegendRow
+        graphic={
+          <circle
+            cx="22"
+            cy="10"
+            r="8"
+            fill="#38bdf8"
+            fillOpacity="0.12"
+            stroke="#38bdf8"
+            strokeWidth="2"
+            strokeDasharray="4 3"
+          />
+        }
+        label="近傍500人"
+      />
+      <LegendRow
+        graphic={<line x1="4" y1="10" x2="40" y2="10" stroke={patternColors.A} strokeWidth="3" />}
+        label="Baseからの変化"
+      />
+    </div>
+  );
+}
+
+function LegendRow({ graphic, label }) {
+  return (
+    <div className="umap-overlay-legend-row">
+      <svg width="44" height="20" viewBox="0 0 44 20">
         {graphic}
       </svg>
-      <span>
-        {label}
-        <span className="has-text-grey ml-2">{description}</span>
-      </span>
+      <span>{label}</span>
     </div>
   );
 }

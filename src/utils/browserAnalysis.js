@@ -100,7 +100,7 @@ function calculateStatistics(runtime, neighbors, technologyData) {
     });
   });
 
-  const topTechnologies = technologies
+  const technologyStatistics = technologies
     .map((technology) => {
       const usageRate = technologyCounts[technology.index] / neighbors.length * 100;
       return {
@@ -112,10 +112,17 @@ function calculateStatistics(runtime, neighbors, technologyData) {
         overallUsageRate: technology.overallUsageRate,
         differencePoint: usageRate - technology.overallUsageRate,
       };
-    })
-    .sort((left, right) => right.differencePoint - left.differencePoint)
-    .slice(0, 10)
-    .map((technology, index) => ({ ...technology, rank: index + 1 }));
+    });
+
+  const topTechnologiesByCategory = technologyData.categories.map((category) => ({
+    key: category.key,
+    label: category.label,
+    technologies: technologyStatistics
+      .filter((technology) => technology.category === category.key)
+      .sort((left, right) => right.differencePoint - left.differencePoint)
+      .slice(0, 3)
+      .map((technology, index) => ({ ...technology, rank: index + 1 })),
+  }));
 
   const metadata = {};
   runtime.metadata.forEach((field, fieldIndex) => {
@@ -145,8 +152,7 @@ function calculateStatistics(runtime, neighbors, technologyData) {
         const overallRate = overallAnswered ? overallCounts[code] / overallAnswered * 100 : 0;
         return { value, usageRate, overallRate, differencePoint: usageRate - overallRate };
       })
-      .sort((left, right) => right.differencePoint - left.differencePoint)
-      .slice(0, 3)
+      .sort((left, right) => right.usageRate - left.usageRate)
       .map((item, index) => ({ ...item, rank: index + 1 }));
 
     metadata[field.key] = { label: field.label, answered: neighborAnswered, items };
@@ -160,7 +166,7 @@ function calculateStatistics(runtime, neighbors, technologyData) {
   return {
     count: neighbors.length,
     rate: neighbors.length / runtime.respondents.length * 100,
-    topTechnologies,
+    topTechnologiesByCategory,
     metadata,
     workExperience: {
       answered: workExperience.length,
