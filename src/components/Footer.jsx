@@ -1,22 +1,13 @@
 export default function Footer() {
   return (
     <footer className="footer app-footer">
-      <div className="content has-text-centered is-size-7 has-text-grey">
-        <p className="mb-1">
-          Data Source: Stack Overflow Developer Survey 2025
-        </p>
-
-        <p className="mb-1">
-          本サイトは公開データを独自に加工・分析した個人制作物です。
-          分析結果は参考情報であり、正確性・完全性を保証するものではありません。
-        </p>
-
-        <p className="mb-1">
-          本サイトはStack Overflowの公式サービスではありません。
-        </p>
-
+      <div className="content is-size-7 has-text-grey">
         <p>
-          © 2026 Developer Tech Stack Map
+          Data:{" "}
+          <a href="https://survey.stackoverflow.co/2025/">
+            Stack Overflow Developer Survey 2025
+          </a>
+          . ODbL 1.0 / DbCL 1.0. Unofficial, modified analysis.
         </p>
       </div>
     </footer>

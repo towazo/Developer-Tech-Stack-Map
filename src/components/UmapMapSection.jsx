@@ -1,4 +1,5 @@
 import UmapMap from "./UmapMap";
+import Footer from "./Footer";
 
 const patternColors = {
   A: "#f2c94c",
@@ -24,6 +25,7 @@ export default function UmapMapSection({
               neighborhoods={neighborhoods}
             />
             <MapOverlayLegend />
+            <Footer />
           </div>
 
         </div>
