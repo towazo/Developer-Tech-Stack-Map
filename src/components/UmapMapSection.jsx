@@ -1,18 +1,110 @@
+import { useMemo, useState } from "react";
 import UmapMap from "./UmapMap";
 import Footer from "./Footer";
+import { translateMetadataValue } from "../utils/metadataTranslations";
 
 const patternColors = {
   A: "#f2c94c",
   B: "#56d6a4",
   C: "#ff6b8a",
 };
+const respondentTrendColors = ["#4e79a7", "#f28e2c", "#59a14f", "#e15759", "#b07aa1"];
+const otherTrendColor = "#76b7b2";
+const missingTrendColor = "#cbd5e1";
 
 export default function UmapMapSection({
   mapData,
+  respondentMetadata,
   basePosition,
   patternPositions,
   neighborhoods,
 }) {
+  const [selectedMetadataKey, setSelectedMetadataKey] = useState("devType");
+  const metadataTrend = useMemo(() => {
+    if (
+      !mapData?.points ||
+      !respondentMetadata?.fields ||
+      !respondentMetadata?.codesByRespondent
+    ) {
+      return null;
+    }
+
+    const fieldIndex = respondentMetadata.fields.findIndex(
+      (field) => field.key === selectedMetadataKey
+    );
+    const safeFieldIndex = fieldIndex >= 0 ? fieldIndex : 0;
+    const field = respondentMetadata.fields[safeFieldIndex];
+
+    if (!field) {
+      return null;
+    }
+
+    const counts = Array(field.values.length).fill(0);
+    let answered = 0;
+    let missing = 0;
+
+    mapData.points.forEach((point) => {
+      const code = respondentMetadata.codesByRespondent[point.id]?.[safeFieldIndex] ?? -1;
+
+      if (code >= 0 && code < field.values.length) {
+        counts[code] += 1;
+        answered += 1;
+      } else {
+        missing += 1;
+      }
+    });
+
+    const rankedItems = field.values
+      .map((value, code) => ({
+        code,
+        value,
+        count: counts[code],
+        rate: answered ? counts[code] / answered * 100 : 0,
+      }))
+      .filter((item) => item.value !== "Other:" && item.count > 0)
+      .sort((left, right) => right.count - left.count || left.value.localeCompare(right.value));
+
+    const leadingItems = rankedItems.slice(0, 5).map((item, index) => ({
+      ...item,
+      label: translateMetadataValue(field.key, item.value),
+      color: respondentTrendColors[index],
+    }));
+    const otherItems = rankedItems.slice(5);
+    const otherCount = otherItems.reduce((total, item) => total + item.count, 0);
+    const pointColorById = {};
+    const codeToColor = new Map(
+      leadingItems.map((item) => [item.code, item.color])
+    );
+
+    otherItems.forEach((item) => {
+      codeToColor.set(item.code, otherTrendColor);
+    });
+
+    mapData.points.forEach((point) => {
+      const code = respondentMetadata.codesByRespondent[point.id]?.[safeFieldIndex] ?? -1;
+      pointColorById[point.id] = codeToColor.get(code) ?? missingTrendColor;
+    });
+
+    return {
+      field,
+      selectedKey: field.key,
+      answered,
+      missing,
+      pointColorById,
+      items: [
+        ...leadingItems,
+        ...(otherCount > 0
+          ? [{
+              label: "その他",
+              count: otherCount,
+              rate: answered ? otherCount / answered * 100 : 0,
+              color: otherTrendColor,
+            }]
+          : []),
+      ],
+    };
+  }, [mapData, respondentMetadata, selectedMetadataKey]);
+
   return (
     <div className="umap-map-section">
       {mapData ? (
@@ -23,14 +115,71 @@ export default function UmapMapSection({
               basePosition={basePosition}
               patternPositions={patternPositions}
               neighborhoods={neighborhoods}
+              pointColorById={metadataTrend?.pointColorById}
             />
-            <MapOverlayLegend />
+            <div className="umap-map-overlay-stack">
+              <MapOverlayLegend />
+              <MapMetadataOverlay
+                fields={respondentMetadata?.fields ?? []}
+                selectedKey={metadataTrend?.selectedKey ?? selectedMetadataKey}
+                trend={metadataTrend}
+                onChange={setSelectedMetadataKey}
+              />
+            </div>
             <Footer />
           </div>
 
         </div>
       ) : (
         <p>マップデータを読み込んでいます...</p>
+      )}
+    </div>
+  );
+}
+
+function MapMetadataOverlay({
+  fields,
+  selectedKey,
+  trend,
+  onChange,
+}) {
+  if (fields.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="umap-map-metadata-overlay">
+      <label className="umap-map-metadata-label" htmlFor="map-metadata-select">
+        回答者の傾向
+      </label>
+      <div className="select is-small">
+        <select
+          id="map-metadata-select"
+          value={selectedKey}
+          onChange={(event) => onChange(event.target.value)}
+        >
+          {fields.map((field) => (
+            <option key={field.key} value={field.key}>
+              {field.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {trend && (
+        <ul className="umap-map-metadata-legend">
+          {trend.items.map((item) => (
+            <li key={item.label}>
+              <span
+                className="umap-map-metadata-swatch"
+                style={{ backgroundColor: item.color }}
+                aria-hidden="true"
+              />
+              <span className="umap-map-metadata-name">{item.label}</span>
+              <strong>{item.rate.toFixed(1)}%</strong>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

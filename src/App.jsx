@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TechnologyPanel from "./components/TechnologyPanel";
 import UmapMapSection from "./components/UmapMapSection";
 import NeighborhoodDetail from "./components/NeighborhoodDetail";
-import { analyzeTechnologyStack } from "./utils/browserAnalysis";
+import { analyzeTechnologyStack, loadRuntime } from "./utils/browserAnalysis";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(
@@ -10,6 +10,7 @@ export default function App() {
   );
   const [mapData, setMapData] = useState(null);
   const [technologyData, setTechnologyData] = useState(null);
+  const [respondentMetadata, setRespondentMetadata] = useState(null);
   const [selectedBase, setSelectedBase] = useState([]);
   const [activeTab, setActiveTab] = useState("base");
   const [selectedPatterns, setSelectedPatterns] = useState({
@@ -67,6 +68,19 @@ export default function App() {
       .then((data) => {
         setTechnologyData(data);
         console.log("technologies.json:", data);
+      });
+
+    loadRuntime()
+      .then((runtime) => {
+        setRespondentMetadata({
+          fields: runtime.metadata,
+          codesByRespondent: runtime.respondents.map(
+            (respondent) => respondent[4]
+          ),
+        });
+      })
+      .catch((error) => {
+        console.error("回答者属性データを読み込めませんでした。", error);
       });
 
   }, []);
@@ -275,6 +289,7 @@ export default function App() {
                 <main className="visualization-main">
                   <UmapMapSection
                     mapData={mapData}
+                    respondentMetadata={respondentMetadata}
                     basePosition={basePosition}
                     patternPositions={patternPositions}
                     neighborhoods={neighborhoods}

@@ -3,7 +3,7 @@ const NEIGHBOR_COUNT = 500;
 
 let runtimePromise;
 
-function loadRuntime() {
+export function loadRuntime() {
   if (!runtimePromise) {
     runtimePromise = fetch("/data/browser_runtime.json").then((response) => {
       if (!response.ok) {
