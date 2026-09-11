@@ -6,6 +6,7 @@ export default function UmapMap({
   basePosition,
   patternPositions,
   neighborhoods,
+  pointColorById,
 }) {
   const width = 900;
   const height = 600;
@@ -135,7 +136,7 @@ export default function UmapMap({
           cx={xScale(point.x)}
           cy={yScale(point.y)}
           r={3}
-          fill="#8ba9f5"
+          fill={pointColorById?.[point.id] ?? "#8ba9f5"}
           opacity={0.56}
         />
       ))}
