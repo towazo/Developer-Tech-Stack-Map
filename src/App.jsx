@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import TechnologyPanel from "./components/TechnologyPanel";
 import UmapMapSection from "./components/UmapMapSection";
 import NeighborhoodDetail from "./components/NeighborhoodDetail";
-import Footer from "./components/Footer";
 import { analyzeTechnologyStack } from "./utils/browserAnalysis";
 
 export default function App() {
@@ -325,8 +324,6 @@ export default function App() {
             onBack={() => navigateToPage("map")}
           />
         )}
-
-        <Footer />
       </div>
     </section>
   );
